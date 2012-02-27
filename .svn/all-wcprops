@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/gallardo/!svn/ver/154/trunk/galaga
+END
+Renderer.js
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/gallardo/!svn/ver/154/trunk/galaga/Renderer.js
+END
+galaga.css
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/gallardo/!svn/ver/127/trunk/galaga/galaga.css
+END
+EnemyManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/gallardo/!svn/ver/130/trunk/galaga/EnemyManager.js
+END
+InputManager.js
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/gallardo/!svn/ver/124/trunk/galaga/InputManager.js
+END
+Player.js
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/gallardo/!svn/ver/119/trunk/galaga/Player.js
+END
+Enemy.js
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/gallardo/!svn/ver/154/trunk/galaga/Enemy.js
+END
+index.html
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/gallardo/!svn/ver/129/trunk/galaga/index.html
+END
+GameEngine.js
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/gallardo/!svn/ver/154/trunk/galaga/GameEngine.js
+END
+Characters.js
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/gallardo/!svn/ver/154/trunk/galaga/Characters.js
+END
+PerformanceStats.js
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/gallardo/!svn/ver/103/trunk/galaga/PerformanceStats.js
+END

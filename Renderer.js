@@ -68,14 +68,3 @@ Renderer.prototype.renderBullets = function(bullets) {
     }
   }
 };
-
-/**
- * This function is a hook into the GameManager main loop. Add any render-specific update code that needs to be done here
- *
- * @param Number dt: The number of miliseconds since the last frame - under ideal circumstances, this will be 16 (1000/16 = 62.5 which is ideal fps)
- */
-Renderer.prototype.update = function(dt) {
-//  console.log(dt)
-};
-
-Renderer.prototype.updateCharacter = function(character) {};

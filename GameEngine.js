@@ -119,19 +119,19 @@ GameEngine.prototype.updateBullets = function(dt) {
  */
 GameEngine.prototype.detectCollisions = function() {
   var enemies = this.getAllEnemies(),
-      enemyLength = enemies.length,
-      playerBulletCount = this.playerBullets.length;
+    enemyLength = enemies.length,
+    playerBulletCount = this.playerBullets.length;
   for (var i = 0; i < playerBulletCount; i++) {
-	if (this.playerBullets[i].active) {
-  	  for (var j = 0; j < enemyLength; j++) {
+	  if (this.playerBullets[i].active) {
+      for (var j = 0; j < enemyLength; j++) {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
-	        enemies[j].die();
+            enemies[j].die();
             this.playerBullets[i].die();
-	      }
+	        }
         }
+	    }
 	  }
-	}
   }
 };
 

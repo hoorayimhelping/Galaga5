@@ -4,7 +4,7 @@ Player.prototype.constructor = Player;
 Player.prototype.initialize = function() {
   Character.prototype.initialize.call(this);
 
-  this.frame = { x: 300, y: 300 };
+  this.frame = { x: 270, y: 300 };
 
   this.sprite = new Image(); 
   this.sprite.src = SPRITESHEET_LOCATION;

@@ -17,7 +17,6 @@ Enemy.prototype.initialize = function(position) {
 
 Enemy.prototype.die = function() {
   this.alive = false;
-  console.log('enemy.die');
 };
 
 // Hank is the blue waspy guy

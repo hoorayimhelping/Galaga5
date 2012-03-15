@@ -19,6 +19,8 @@
   <script type="text/javascript" src="Player.js"></script>
   <script type="text/javascript" src="Enemy.js"></script>
   <script type="text/javascript" src="EnemyManager.js"></script>
+  <script type="text/javascript" src="Particle.js"></script>
+  <script type="text/javascript" src="ParticleManager.js"></script>
   <script type="text/javascript" src="PerformanceStats.js"></script>
   <script type="text/javascript" src="GameEngine.js"></script>
   <script type="text/javascript" src="Renderer.js"></script>
@@ -38,7 +40,19 @@
     var canvas = $('#canvas')[0];
 
     galagaEngine.initialize(canvas).togglePerformanceStats('on', $('#performance_stats')[0]).run();
+    $('#performance_stats').append('<a href="" id="reload_link">Reload</a>').delegate('#reload_link', 'click', function() {
+      window.location.reload();
+
+      return false;
+    });
   });
+
+  // Remove function provided by John Resig
+  Array.prototype.remove = function(from, to) {
+    var rest = this.slice((to || from) + 1 || this.length);
+    this.length = from < 0 ? this.length + from : from;
+    return this.push.apply(this, rest);
+  };
 </script>
 <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script> <script type="text/javascript">try {var pageTracker = _gat._getTracker("UA-4483501-2"); pageTracker._trackPageview();} catch(err) {}</script>
 </body>

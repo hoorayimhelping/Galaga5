@@ -12,6 +12,12 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
     }
   }
 
+  if (enemyType.toLowerCase() === 'dean') {
+    for (var i = 0; i < enemyCount; i++) {
+      this.enemies.push(new Dean().initialize({ y: 90, x: (i + 2) * 55 }));
+    }
+  }
+
   return this;
 };
 

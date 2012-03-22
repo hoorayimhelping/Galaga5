@@ -27,6 +27,7 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleCount = 45;
 
   this.hankManager = new EnemyManager().initialize('hank', 4);
+  this.deanManager = new EnemyManager().initialize('dean', 4);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -251,7 +252,8 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies;
+  var x = this.hankManager.enemies.concat(this.deanManager.enemies);
+  return x;
 };
 
 GameEngine.prototype.menu = function() {

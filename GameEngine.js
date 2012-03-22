@@ -144,7 +144,7 @@ GameEngine.prototype.getAllParticles = function() {
   var particles = [];
 
   for (var i = 0, l = this.particleManagers.length; i < l; i++) {
-    if (!this.particleManagers[i].active) {
+    if (!this.particleManagers[i] || !this.particleManagers[i].active) {
       this.particleManagers.remove(i);
       continue;
     }

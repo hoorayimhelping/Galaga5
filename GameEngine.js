@@ -18,7 +18,16 @@ GameEngine.prototype.initialize = function(canvas) {
   this.playerBullets = [new Bullet().initialize(), new Bullet().initialize()];
   this.enemyBullets = [];
 
+  this.particleColors = {
+    blue: { r: 77, g: 109, b: 243, a: 1 },
+    yellow: { r: 255, g: 242, b: 0, a: 1 },
+    red: { r: 238, g: 28, b: 36, a: 1 }
+  };
+  this.particleManagers = [];
+  this.particleCount = 45;
+
   this.hankManager = new EnemyManager().initialize('hank', 4);
+  this.deanManager = new EnemyManager().initialize('dean', 4);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -27,7 +36,7 @@ GameEngine.prototype.initialize = function(canvas) {
 };
 
 /**
- * Update function: This function is the main loop of the game. All game-related calls originate here
+ * Update function: This function is the main loop of the game. All cyclical game-related calls originate here
  *
  * @param Number dt: The number of miliseconds since the last frame
  *    under ideal circumstances, this will be 16 (1000/16 = 62.5 fps)
@@ -39,11 +48,17 @@ GameEngine.prototype.update = function(dt) {
   this.renderer.renderPlayer(this.player);
   this.renderer.renderEnemies(this.getAllEnemies());
   this.renderer.renderBullets(this.playerBullets);
+  if (this.particleManagers.length) {
+    this.renderer.renderParticles(this.getAllParticles());
+  }
+
+  var timeScalar = dt/2;
 
   if (!this.paused) {
-    this.updatePlayer(this.getPressedKeys(), dt);
-    this.updateEnemies(dt);
-    this.updateBullets(dt);
+    this.updatePlayer(this.getPressedKeys(), timeScalar);
+    this.updateEnemies(timeScalar);
+    this.updateBullets(timeScalar);
+    this.updateParticles(timeScalar/15);
     this.detectCollisions();
   }
 
@@ -57,10 +72,10 @@ GameEngine.prototype.update = function(dt) {
  * Updates the player's position if the player is moving
  *
  * @param Object keys: An object map representing which keys are currently pressed
- * @param Number dt: Time change in milliseconds
+ * @param Number timeScalar: Time since last frame adjusted by game engine
  */
-GameEngine.prototype.updatePlayer = function(keys, dt) {
-  var units = this.calculatePlayerMovement(keys, dt);
+GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
+  var units = this.calculatePlayerMovement(keys, timeScalar);
   if (units !== 0) {
     this.player.move(units);
   }
@@ -69,8 +84,14 @@ GameEngine.prototype.updatePlayer = function(keys, dt) {
 /**
  * @param Number dt: Time change in milliseconds
  */
-GameEngine.prototype.updateEnemies = function(dt) {
-//  this.hankManager.update(dt);
+GameEngine.prototype.updateEnemies = function(timeScalar) {
+//  this.hankManager.update(timeScalar);
+};
+
+GameEngine.prototype.updateParticles = function(timeScalar) {
+  for (var i = 0, l = this.particleManagers.length; i < l; i++) {
+    this.particleManagers[i].update(timeScalar);
+  }
 };
 
 /**
@@ -99,9 +120,9 @@ GameEngine.prototype.fireBullet = function(bullet) {
 /**
  * Moves the active bullets, deactivates off-screen bullets, ignores deactived bullets
  *
- * @param Number dt: Time change in milliseconds
+ * @param Number timeScalar: Time since last frame adjusted by game engine
  */
-GameEngine.prototype.updateBullets = function(dt) {
+GameEngine.prototype.updateBullets = function(timeScalar) {
   for (var i = 0, j = this.playerBullets.length; i < j; i++) {
     if (this.playerBullets[i].active) {
       var bullet = this.playerBullets[i];
@@ -109,9 +130,28 @@ GameEngine.prototype.updateBullets = function(dt) {
         bullet.die();
         continue;
       }
-      bullet.move(-bullet.velocity.y * dt/2);
+      bullet.move(-bullet.velocity.y * timeScalar);
     }
   }
+};
+
+/**
+ * Get all particles for rendering from active particle managers
+ *
+ * @return Array: The array of particles to render
+ */
+GameEngine.prototype.getAllParticles = function() {
+  var particles = [];
+
+  for (var i = 0, l = this.particleManagers.length; i < l; i++) {
+    if (!this.particleManagers[i].active) {
+      this.particleManagers.remove(i);
+      continue;
+    }
+    particles = particles.concat(this.particleManagers[i].particles);
+  }
+
+  return particles;
 };
 
 /**
@@ -121,12 +161,14 @@ GameEngine.prototype.detectCollisions = function() {
   var enemies = this.getAllEnemies(),
     enemyLength = enemies.length,
     playerBulletCount = this.playerBullets.length;
+
   for (var i = 0; i < playerBulletCount; i++) {
 	  if (this.playerBullets[i].active) {
       for (var j = 0; j < enemyLength; j++) {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
+            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width/2, y: enemies[j].frame.y + enemies[j].frame.height/2 });
             this.playerBullets[i].die();
 	        }
         }
@@ -146,20 +188,25 @@ GameEngine.prototype.colliding = function(ship, bullet) {
   /* If the following evaluates to true, the two rectangles are not colliding
      (ship.bottom < bullet.top) || (ship.top > bullet.bottom) ||
 	 (ship.left > bullet.right) || (ship.right < bullet.left) */
-
   return !((ship.frame.height + ship.frame.y) < bullet.frame.y ||
 	       ship.frame.y > (bullet.frame.height + bullet.frame.y) ||
 	       ship.frame.x > (bullet.frame.x + bullet.frame.width) ||
 	       (ship.frame.x + ship.frame.width) < bullet.frame.x);
 };
 
+GameEngine.prototype.explode = function(point) {
+  this.particleManagers.push(new ParticleManager()
+    .initialize(this.particleCount)
+    .create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]));
+};
+
 /**
  * Calculate how many units to move the player character
  *
  * @param Object movement: The object map of the pressed keys
- * @param Number dt: Time change in milliseconds
+ * @param Number timeScalar: Time since last frame adjusted by game engine
  */
-GameEngine.prototype.calculatePlayerMovement = function(movement, dt) {
+GameEngine.prototype.calculatePlayerMovement = function(movement, timeScalar) {
   //guard for player hitting both left and right at the same time
   if (movement.right > 0 && movement.left > 0) { return 0; }
 
@@ -172,7 +219,7 @@ GameEngine.prototype.calculatePlayerMovement = function(movement, dt) {
   var units = movement.right > 0 ? movement.right : movement.left;
   var modifier = movement.right > 0 ? 1 : -1;
 
-  return units * (dt/2) * modifier;
+  return units * timeScalar * modifier;
 };
 
 /**
@@ -183,10 +230,10 @@ GameEngine.prototype.calculatePlayerMovement = function(movement, dt) {
 GameEngine.prototype.getPressedKeys = function() {
   var movement = {
     'left': 0, 'up': 0, 'right': 0, 'down': 0
-  };
-  var keys = this.inputManager.getPressedKeys();
+  },
+      keys = this.inputManager.getPressedKeys();
 
-  for (key in keys) {
+  for (var key in keys) {
     if (keys[key]) {
       if (key == 'leftArrow') {
         movement['left'] = 1;
@@ -205,7 +252,8 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies;
+  var x = this.hankManager.enemies.concat(this.deanManager.enemies);
+  return x;
 };
 
 GameEngine.prototype.menu = function() {

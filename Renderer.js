@@ -45,11 +45,15 @@ Renderer.prototype.renderPlayer = function(player) {
  * @param Array enemies: An array of Enemy objects
  */
 Renderer.prototype.renderEnemies = function(enemies) {
-  for (var i = 0, j = enemies.length; i < j; i++) {
+  for (var i = 0, l = enemies.length; i < l; i++) {
     if (enemies[i].alive) {
       this.context.drawImage(enemies[i].sprite, enemies[i].sprite.frame.x, enemies[i].sprite.frame.y,
-	  enemies[i].sprite.frame.width, enemies[i].sprite.frame.height,
-   	  enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
+        enemies[i].sprite.frame.width, enemies[i].sprite.frame.height,
+        enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
+
+      //this.context.strokeStyle = '#F00';
+      //this.context.lineWidth = 2;
+      //this.context.strokeRect(enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
     }
   }
 }
@@ -65,6 +69,34 @@ Renderer.prototype.renderBullets = function(bullets) {
       this.context.drawImage(bullets[i].sprite, bullets[i].sprite.frame.x, bullets[i].sprite.frame.y,
         bullets[i].sprite.frame.width, bullets[i].sprite.frame.height,
         bullets[i].frame.x, bullets[i].frame.y, bullets[i].frame.width, bullets[i].frame.height);
+
+        //this.context.strokeStyle = '#00F';
+        //this.context.lineWidth = 2;
+        //this.context.strokeRect(bullets[i].frame.x, bullets[i].frame.y, bullets[i].frame.width, bullets[i].frame.height);
+    }
+  }
+};
+
+/**
+ * Render all active particles
+ *
+ * @param Array particles: The array of particles
+ */
+Renderer.prototype.renderParticles = function(particles) {
+  for (var i = 0, l = particles.length; i < l; i++) {
+    if (!particles[i].alive) { continue; }
+    var particle = particles[i];
+
+    this.context.beginPath();
+      this.context.arc(particle.position.x, particle.position.y, particle.radius, 0, Math.PI*2, true);
+    this.context.closePath();
+
+    this.context.fillStyle = particle.getFillStyle();
+    this.context.fill();
+
+    if (particle.hasOwnProperty('strokeStyle') && particle.strokeStyle !== '') {
+      this.context.strokeStyle = particle.strokeStyle;
+      this.context.stroke();
     }
   }
 };

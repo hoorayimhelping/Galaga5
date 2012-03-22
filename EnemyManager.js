@@ -12,13 +12,19 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
     }
   }
 
+  if (enemyType.toLowerCase() === 'dean') {
+    for (var i = 0; i < enemyCount; i++) {
+      this.enemies.push(new Dean().initialize({ y: 90, x: (i + 2) * 55 }));
+    }
+  }
+
   return this;
 };
 
-// TODO: change this so that it doesn't need the change in time this deep
-EnemyManager.prototype.update = function(dt) {
-  var length = this.enemies.length;
-  var modifier = 1;
+// Time to do stuff, bro.
+EnemyManager.prototype.update = function(timeScalar) {
+  var length = this.enemies.length,
+      modifier = 1;
 
   if (this.enemies[length - 1].frame.x > 400 && modifier === 1) {
     modifier = -1;
@@ -27,6 +33,6 @@ EnemyManager.prototype.update = function(dt) {
   }
 
   for (var i = 0; i < length; i++) {
-    this.enemies[i].frame.x += 1 * modifier * (dt/2);
+    this.enemies[i].frame.x += 1 * modifier * timeScalar;
   }
 };

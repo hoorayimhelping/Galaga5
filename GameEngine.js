@@ -196,7 +196,10 @@ GameEngine.prototype.colliding = function(ship, bullet) {
 };
 
 /**
- * 
+ * Creates a particle explosion in the color palette of the enemy that was killed
+ *
+ * @param Object point: The coordinates of the explosion in of the type {x: Number, y: Number}
+ * @param String type: The type of the enemy exploding
  */
 GameEngine.prototype.explode = function(point, type) {
   var manager = new ParticleManager().initialize(this.particleCount);

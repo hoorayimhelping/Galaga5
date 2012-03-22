@@ -36,6 +36,8 @@ Hank.prototype.initialize = function(position) {
   this.frame.width = this.sprite.frame.width/3;
   this.frame.height = this.sprite.frame.height/3;
 
+  this.type = 'hank';
+
   return this;
 };
 
@@ -51,6 +53,8 @@ Dean.prototype.initialize = function(position) {
 
   this.frame.width = this.sprite.frame.width/3;
   this.frame.height = this.sprite.frame.height/3;
+
+  this.type = 'dean';
 
   return this;
 };

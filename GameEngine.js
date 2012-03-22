@@ -21,7 +21,8 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleColors = {
     blue: { r: 77, g: 109, b: 243, a: 1 },
     yellow: { r: 255, g: 242, b: 0, a: 1 },
-    red: { r: 238, g: 28, b: 36, a: 1 }
+    red: { r: 238, g: 28, b: 36, a: 1 },
+    pink: { r: 255, g: 163, b: 177, a: 1 }
   };
   this.particleManagers = [];
   this.particleCount = 45;
@@ -168,7 +169,7 @@ GameEngine.prototype.detectCollisions = function() {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
-            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width/2, y: enemies[j].frame.y + enemies[j].frame.height/2 });
+            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width/2, y: enemies[j].frame.y + enemies[j].frame.height/2 }, enemies[j].type);
             this.playerBullets[i].die();
 	        }
         }
@@ -194,10 +195,20 @@ GameEngine.prototype.colliding = function(ship, bullet) {
 	       (ship.frame.x + ship.frame.width) < bullet.frame.x);
 };
 
-GameEngine.prototype.explode = function(point) {
-  this.particleManagers.push(new ParticleManager()
-    .initialize(this.particleCount)
-    .create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]));
+/**
+ * 
+ */
+GameEngine.prototype.explode = function(point, type) {
+  var manager = new ParticleManager().initialize(this.particleCount);
+
+  if (type === 'hank') {
+    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]);
+  }
+  if (type === 'dean') {
+    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.pink]);
+  }
+
+  this.particleManagers.push(manager);
 };
 
 /**

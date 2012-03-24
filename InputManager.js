@@ -42,6 +42,11 @@ InputManager.prototype.bindShit = function() {
     // ignore spacebar presses, so the keypress handler below can pick this event up
     if (e.which == 32) { return true; }
 
+    // chrome handles escape strangely
+    if (e.which == 27) {
+      self.engine.togglePause();
+    }
+
     if (e.which == 37) {
       self.characters['leftArrow'] = true;
       ret = false;
@@ -79,10 +84,6 @@ InputManager.prototype.bindShit = function() {
     }
     return ret;
   }).bind('keypress', function(e) {
-    if (e.which == 27) {
-      self.characters['escape'] = true;
-    }
-
     if (e.which == 32) {
       self.engine.fire();
     }

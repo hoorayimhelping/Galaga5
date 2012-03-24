@@ -269,14 +269,15 @@ GameEngine.prototype.getAllEnemies = function() {
   return this.hankManager.enemies.concat(this.deanManager.enemies);;
 };
 
-GameEngine.prototype.pause = function() {
-  console.log('paused');
+GameEngine.prototype.togglePause = function() {
+  this.paused = !this.paused;
 };
 
 /**
  * A public/interface method currently used by InputManager to fire a player's bullet
  */
 GameEngine.prototype.fire = function() {
+  if (this.paused) { return; }
   for (var i = 0, j = this.playerBullets.length; i < j; i++) {
     if (!this.playerBullets[i].active) {
       this.fireBullet(this.playerBullets[i]);

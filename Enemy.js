@@ -58,19 +58,3 @@ Dean.prototype.initialize = function(position) {
 
   return this;
 };
-
-// Dean is the red butterfly looking fellow
-var Dean = function() {};
-Dean.prototype = new Enemy();
-Dean.prototype.constructor = Dean;
-
-Dean.prototype.initialize = function(position) {
-  Enemy.prototype.initialize.call(this, position);
-
-  this.sprite.frame = { x: 628, y: 24, width: 104, height: 80 };
-
-  this.frame.width = this.sprite.frame.width/3;
-  this.frame.height = this.sprite.frame.height/3;
-
-  return this;
-};

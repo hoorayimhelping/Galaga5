@@ -183,6 +183,12 @@ GameEngine.prototype.colliding = function(ship, bullet) {
 	       (ship.frame.x + ship.frame.width) < bullet.frame.x);
 };
 
+GameEngine.prototype.explode = function(point) {
+  this.particleManagers.push(new ParticleManager()
+    .initialize(this.particleCount)
+    .create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]));
+};
+
 /**
  * Creates a particle explosion in the color palette of the enemy that was killed
  *

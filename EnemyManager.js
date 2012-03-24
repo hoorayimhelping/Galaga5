@@ -21,6 +21,10 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
   return this;
 };
 
+EnemyManager.prototype.initialAttack = function(timeScalar) {
+  
+};
+
 // Time to do stuff, bro.
 EnemyManager.prototype.update = function(timeScalar) {
   var length = this.enemies.length,

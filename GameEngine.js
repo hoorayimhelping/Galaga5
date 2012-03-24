@@ -91,18 +91,8 @@ GameEngine.prototype.updateEnemies = function(timeScalar) {
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
   for (var i = 0, l = this.particleManagers.length; i < l; i++) {
-    this.particleManagers[i].update(timeScalar);
-  }
-};
-
-/**
- * A public/interface method currently used by InputManager to fire a player's bullet
- */
-GameEngine.prototype.fire = function() {
-  for (var i = 0, j = this.playerBullets.length; i < j; i++) {
-    if (!this.playerBullets[i].active) {
-      this.fireBullet(this.playerBullets[i]);
-      return;
+    if (this.particleManagers[i].active) {
+      this.particleManagers[i].update(timeScalar);
     }
   }
 };
@@ -145,11 +135,9 @@ GameEngine.prototype.getAllParticles = function() {
   var particles = [];
 
   for (var i = 0, l = this.particleManagers.length; i < l; i++) {
-    if (!this.particleManagers[i] || !this.particleManagers[i].active) {
-      this.particleManagers.remove(i);
-      continue;
+    if (this.particleManagers[i].active) {
+      particles = particles.concat(this.particleManagers[i].particles);
     }
-    particles = particles.concat(this.particleManagers[i].particles);
   }
 
   return particles;
@@ -202,7 +190,16 @@ GameEngine.prototype.colliding = function(ship, bullet) {
  * @param String type: The type of the enemy exploding
  */
 GameEngine.prototype.explode = function(point, type) {
-  var manager = new ParticleManager().initialize(this.particleCount);
+  var manager = null;
+  for (var i = 0, l = this.particleManagers.length; i < l; i++) {
+    if (!this.particleManagers[i].active) {
+      manager = this.particleManagers[i];
+      break;
+    }
+  }
+
+  manager = manager || new ParticleManager();
+  manager.initialize(this.particleCount);
 
   if (type === 'hank') {
     manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]);
@@ -211,7 +208,10 @@ GameEngine.prototype.explode = function(point, type) {
     manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.pink]);
   }
 
-  this.particleManagers.push(manager);
+  // only push to the end of the array if it's a brand new manager
+  if (manager !== this.particleManagers[i]) {
+    this.particleManagers.push(manager);
+  }  
 };
 
 /**
@@ -266,12 +266,23 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  var x = this.hankManager.enemies.concat(this.deanManager.enemies);
-  return x;
+  return this.hankManager.enemies.concat(this.deanManager.enemies);;
 };
 
-GameEngine.prototype.menu = function() {
+GameEngine.prototype.pause = function() {
   console.log('paused');
+};
+
+/**
+ * A public/interface method currently used by InputManager to fire a player's bullet
+ */
+GameEngine.prototype.fire = function() {
+  for (var i = 0, j = this.playerBullets.length; i < j; i++) {
+    if (!this.playerBullets[i].active) {
+      this.fireBullet(this.playerBullets[i]);
+      return;
+    }
+  }
 };
 
 /**

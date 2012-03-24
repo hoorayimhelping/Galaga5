@@ -68,9 +68,10 @@ ParticleManager.prototype.create = function(origin, colors) {
  */
 ParticleManager.prototype.update = function(timeScalar) {
   for (var i = 0; i < this.particleCount; i++ ) {
-    if (!this.particles[i].alive) { this.deadCount++; continue; }
+    // if a large portion of the particles are dead, deactivate this manager
+    if (this.deadCount && this.particleCount/this.deadCount > .95) { this.active = false; break; }
 
-    if (this.deadCount && this.particleCount/this.deadCount > .95) { this.active = false; }
+    if (!this.particles[i].alive) { this.deadCount++; continue; }
 
     var particle = this.particles[i];
     particle.acceleration.y -= this.gravity * particle.mass * timeScalar;

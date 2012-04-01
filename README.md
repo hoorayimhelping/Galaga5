@@ -4,8 +4,11 @@
 
 This is a clone of the arcade classic Galaga done in HTML5. The game engine and logic is written in JavaScript and rendered using HTML5's cavans tag and a 2d rendering context.
 
+
 Arrow keys move left and right
+
 Spacebar fires
+
 Escape pauses
 
 ## About

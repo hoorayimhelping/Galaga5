@@ -29,6 +29,7 @@ GameEngine.prototype.initialize = function(canvas) {
 
   this.hankManager = new EnemyManager().initialize('hank', 4);
   this.deanManager = new EnemyManager().initialize('dean', 4);
+  this.deanCircleManager = new EnemyManager().initialize('dean_circle', 1);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -86,7 +87,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  * @param Number dt: Time change in milliseconds
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
-//  this.hankManager.update(timeScalar);
+  this.deanCircleManager.circle(50, timeScalar * 5);
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -266,7 +267,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies.concat(this.deanManager.enemies);;
+  return this.hankManager.enemies.concat(this.deanManager.enemies, this.deanCircleManager.enemies);
 };
 
 GameEngine.prototype.togglePause = function() {

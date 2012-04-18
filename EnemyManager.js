@@ -18,11 +18,27 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
     }
   }
 
+  if (enemyType.toLowerCase() === 'dean_circle') {
+    for (var i = 0; i < enemyCount; i++) {
+      this.enemies.push(new Dean().initialize({ y: 130, x: (i + 2) * 55 }));
+    }
+  }
+
   return this;
 };
 
 EnemyManager.prototype.initialAttack = function(timeScalar) {
   
+};
+
+/**
+ * Make the mans do a cirlce I guess
+ */
+EnemyManager.prototype.circle = function(radius, theta) {
+  for (var i = 0, l = this.enemies.length; i < l; i++) {
+    this.enemies[i].frame.x = Math.sin(theta, radius);
+    this.enemies[i].frame.y = Math.cos(theta, radius);
+  }
 };
 
 // Time to do stuff, bro.

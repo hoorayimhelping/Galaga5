@@ -5,6 +5,8 @@ var EnemyManager = function() {};
  */
 EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
   this.enemies = [];
+  this.angle = 5;
+  this.angleIncrement = 2;
 
   if (enemyType.toLowerCase() === 'hank') {
     for (var i = 0; i < enemyCount; i++) {
@@ -34,10 +36,18 @@ EnemyManager.prototype.initialAttack = function(timeScalar) {
 /**
  * Make the mans do a cirlce I guess
  */
-EnemyManager.prototype.circle = function(radius, theta) {
+EnemyManager.prototype.circle = function(timeScalar, centerPoint, radius) {
+  var radians = (this.angle * timeScalar) * (Math.PI/180);
+
   for (var i = 0, l = this.enemies.length; i < l; i++) {
-    this.enemies[i].frame.x = Math.sin(theta, radius);
-    this.enemies[i].frame.y = Math.cos(theta, radius);
+    this.enemies[i].frame.y = centerPoint + Math.sin(radians) * radius;
+    this.enemies[i].frame.x = centerPoint + Math.cos(radians) * radius;
+
+console.log(Math.cos(radians), Math.sin(radians), radians)
+  }
+  this.angle += 0.02;
+  if (this.angle > 360) {
+    this.angle -= 180;
   }
 };
 

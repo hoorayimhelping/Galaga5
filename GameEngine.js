@@ -87,7 +87,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  * @param Number dt: Time change in milliseconds
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
-  this.deanCircleManager.circle(50, timeScalar * 5);
+  this.deanCircleManager.circle(timeScalar, 130, 200);
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {

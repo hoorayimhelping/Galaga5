@@ -36,18 +36,17 @@ EnemyManager.prototype.initialAttack = function(timeScalar) {
 /**
  * Make the mans do a cirlce I guess
  */
-EnemyManager.prototype.circle = function(timeScalar, centerPoint, radius) {
-  var radians = (this.angle * timeScalar) * (Math.PI/180);
+EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
+  var radians = (this.angle) * (Math.PI/180);
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     this.enemies[i].frame.y = centerPoint + Math.sin(radians) * radius;
     this.enemies[i].frame.x = centerPoint + Math.cos(radians) * radius;
 
-console.log(Math.cos(radians), Math.sin(radians), radians)
   }
-  this.angle += 0.02;
+  this.angle += 2.3 * speed;
   if (this.angle > 360) {
-    this.angle -= 180;
+    this.angle = 0;
   }
 };
 

@@ -5,6 +5,8 @@ var EnemyManager = function() {};
  */
 EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
   this.enemies = [];
+  this.angle = 5;
+  this.angleIncrement = 2;
 
   if (enemyType.toLowerCase() === 'hank') {
     for (var i = 0; i < enemyCount; i++) {
@@ -18,11 +20,34 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
     }
   }
 
+  if (enemyType.toLowerCase() === 'dean_circle') {
+    for (var i = 0; i < enemyCount; i++) {
+      this.enemies.push(new Dean().initialize({ y: 130, x: (i + 2) * 55 }));
+    }
+  }
+
   return this;
 };
 
 EnemyManager.prototype.initialAttack = function(timeScalar) {
   
+};
+
+/**
+ * Make the mans do a cirlce I guess
+ */
+EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
+  var radians = (this.angle) * (Math.PI/180);
+
+  for (var i = 0, l = this.enemies.length; i < l; i++) {
+    this.enemies[i].frame.y = centerPoint + Math.sin(radians) * radius;
+    this.enemies[i].frame.x = centerPoint + Math.cos(radians) * radius;
+
+  }
+  this.angle += 2.3 * speed;
+  if (this.angle > 360) {
+    this.angle = 0;
+  }
 };
 
 // Time to do stuff, bro.

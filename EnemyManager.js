@@ -20,9 +20,10 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
     }
   }
 
-  if (enemyType.toLowerCase() === 'dean_circle') {
+  if (enemyType.toLowerCase() === 'circle_man') {
     for (var i = 0; i < enemyCount; i++) {
-      this.enemies.push(new Dean().initialize({ y: 130, x: (i + 2) * 55 }));
+      var man = i % 2 ? new Dean() : new Hank();
+      this.enemies.push(new man.initialize({ y: 130, x: (i + 2) * 55 }));
     }
   }
 
@@ -40,8 +41,8 @@ EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
   var radians = (this.angle) * (Math.PI/180);
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
-    this.enemies[i].frame.y = centerPoint + Math.sin(radians) * radius;
-    this.enemies[i].frame.x = centerPoint + Math.cos(radians) * radius;
+    this.enemies[i].frame.y = centerPoint + Math.sin(radians * i) * radius;
+    this.enemies[i].frame.x = centerPoint + Math.cos(radians * (i%5)) * radius;
 
   }
   this.angle += 2.3 * speed;

@@ -22,8 +22,9 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
 
   if (enemyType.toLowerCase() === 'circle_man') {
     for (var i = 0; i < enemyCount; i++) {
+      console.log(enemyCount, i)
       var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(new man.initialize({ y: 130, x: (i + 2) * 55 }));
+      this.enemies.push(man.initialize({ y: 130, x: (i + 2) * 55 }));
     }
   }
 

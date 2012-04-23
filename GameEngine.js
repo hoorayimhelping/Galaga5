@@ -149,12 +149,12 @@ GameEngine.prototype.getAllParticles = function() {
  */
 GameEngine.prototype.detectCollisions = function() {
   var enemies = this.getAllEnemies(),
-    enemyLength = enemies.length,
+    enemyCount = enemies.length,
     playerBulletCount = this.playerBullets.length;
 
   for (var i = 0; i < playerBulletCount; i++) {
 	  if (this.playerBullets[i].active) {
-      for (var j = 0; j < enemyLength; j++) {
+      for (var j = 0; j < enemyCount; j++) {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();

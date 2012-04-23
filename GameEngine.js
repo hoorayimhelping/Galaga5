@@ -29,7 +29,7 @@ GameEngine.prototype.initialize = function(canvas) {
 
   this.hankManager = new EnemyManager().initialize('hank', 4);
   this.deanManager = new EnemyManager().initialize('dean', 4);
-  this.deanCircleManager = new EnemyManager().initialize('dean_circle', 1);
+  this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;

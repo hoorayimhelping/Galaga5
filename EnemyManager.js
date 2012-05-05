@@ -65,8 +65,8 @@ EnemyManager.prototype.sine = function(speed, centerPoint, radius) {
   var radians = (this.angle) * (Math.PI/180);
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
-    this.enemies[i].frame.y = centerPoint + Math.sin(radians * i) * radius;
-    this.enemies[i].frame.x = centerPoint + Math.sin(radians * i) * radius;
+    this.enemies[i].frame.y = centerPoint + Math.sin(radians * (i + 2)) * radius;
+    this.enemies[i].frame.x = centerPoint + Math.cos(radians) * radius;
   }
 
   this.angle += 2.3 * speed;

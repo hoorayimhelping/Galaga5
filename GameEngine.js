@@ -30,7 +30,7 @@ GameEngine.prototype.initialize = function(canvas) {
   this.hankManager = new EnemyManager().initialize('hank', 4);
   this.deanManager = new EnemyManager().initialize('dean', 4);
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
-  this.sineManager = new EnemyManager().initialize('sine_man', 4);
+  this.sineManager = new EnemyManager().initialize('sine_man', 1);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -89,7 +89,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
   this.deanCircleManager.circle(1.07, 230, 75);
-  this.sineManager.circle(1.07, 130, 75);
+  this.sineManager.sine(1.07, 200, 105);
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {

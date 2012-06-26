@@ -117,7 +117,7 @@ GameEngine.prototype.fireBullet = function(bullet) {
  * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateBullets = function(timeScalar) {
-  for (var i = 0, j = this.playerBullets.length; i < j; i++) {
+  for (var i = 0, l = this.playerBullets.length; i < l; i++) {
     if (this.playerBullets[i].active) {
       var bullet = this.playerBullets[i];
       if (bullet.frame.y + bullet.frame.height <= 0) {

@@ -31,6 +31,7 @@ GameEngine.prototype.initialize = function(canvas) {
   this.deanManager = new EnemyManager().initialize('dean', 4);
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
   this.sineManager = new EnemyManager().initialize('sine_man', 1);
+  this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -85,11 +86,15 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
 };
 
 /**
- * @param Number dt: Time change in milliseconds
+ * Updates all the enemies
+ *
+ * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
   this.deanCircleManager.circle(1.07, 230, 75);
   this.sineManager.sine(1.07, 200, 105);
+
+  this.shuffleManager.shuffle();
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -117,7 +122,7 @@ GameEngine.prototype.fireBullet = function(bullet) {
  * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateBullets = function(timeScalar) {
-  for (var i = 0, j = this.playerBullets.length; i < j; i++) {
+  for (var i = 0, l = this.playerBullets.length; i < l; i++) {
     if (this.playerBullets[i].active) {
       var bullet = this.playerBullets[i];
       if (bullet.frame.y + bullet.frame.height <= 0) {
@@ -269,7 +274,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies.concat(this.deanManager.enemies, this.deanCircleManager.enemies, this.sineManager.enemies);
+  return this.hankManager.enemies.concat(this.deanManager.enemies, this.deanCircleManager.enemies, this.sineManager.enemies, this.shuffleManager.enemies);
 };
 
 GameEngine.prototype.togglePause = function() {

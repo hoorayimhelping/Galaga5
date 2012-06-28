@@ -34,6 +34,13 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
     }
   }
 
+  if (enemyType.toLowerCase() === 'shuffle_man') {
+    for (var i = 0; i < enemyCount; i++) {
+      var man = i % 2 ? new Dean() : new Hank();
+      this.enemies.push(man.initialize({ y: 210, x: (i + 2) * 55 }));
+    }
+  }
+
   return this;
 };
 
@@ -59,7 +66,7 @@ EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
 };
 
 /**
- * Pretty busted ass sine wave
+ * Make the mans follow a sine pattern, bro
  */
 EnemyManager.prototype.sine = function(speed, centerPoint, radius) {
   var radians = (this.angle) * (Math.PI/180);
@@ -73,6 +80,12 @@ EnemyManager.prototype.sine = function(speed, centerPoint, radius) {
   if (this.angle > 360) {
     this.angle = 0;
   }
+};
+
+// Do that dougie
+// No seriously though, this moves the mans back and forth along the x axis
+EnemyManager.prototype.shuffle = function() {
+  
 };
 
 // Time to do stuff, bro.

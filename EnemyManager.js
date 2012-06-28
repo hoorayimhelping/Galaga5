@@ -37,7 +37,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
   if (enemyType.toLowerCase() === 'shuffle_man') {
     for (var i = 0; i < enemyCount; i++) {
       var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(man.initialize({ y: 210, x: (i + 2) * 55 }));
+      this.enemies.push(man.initialize({ y: 130, x: (i + 2) * 55 }));
     }
   }
 

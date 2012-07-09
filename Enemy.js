@@ -59,3 +59,20 @@ Dean.prototype.initialize = function(position) {
 
   return this;
 };
+
+var Brock = function() {};
+Brock.prototype = new Enemy();
+Brock.prototype.constructor = Brock;
+
+Brock.prototype.initialize = function(position) {
+  Enemy.prototype.initialize.call(this, position);
+
+  this.sprite.frame = { x: 591, y: 313, width: 120, height: 128 };
+
+  this.frame.width = this.sprite.frame.width/3;
+  this.frame.height = this.sprite.frame.height/3;
+
+  this.type = 'brock';
+
+  return this;
+};

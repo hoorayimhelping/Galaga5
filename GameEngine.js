@@ -94,7 +94,7 @@ GameEngine.prototype.updateEnemies = function(timeScalar) {
   this.deanCircleManager.circle(1.07, 230, 75);
   this.sineManager.sine(1.07, 200, 105);
 
-  this.shuffleManager.shuffle();
+  this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.width });
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -111,7 +111,7 @@ GameEngine.prototype.updateParticles = function(timeScalar) {
  * @param Object bullet: An inactive bullet from GameEngine's bullet list
  */
 GameEngine.prototype.fireBullet = function(bullet) {
-  bullet.frame.x = this.player.frame.x + (this.player.frame.width/2) - 4;
+  bullet.frame.x = this.player.frame.x + (this.player.frame.width / 2) - 4;
   bullet.frame.y = this.canvas.height - this.player.frame.height - 15;
   bullet.active = true;
 };
@@ -165,7 +165,7 @@ GameEngine.prototype.detectCollisions = function() {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
-            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width/2, y: enemies[j].frame.y + enemies[j].frame.height/2 }, enemies[j].type);
+            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width / 2, y: enemies[j].frame.y + enemies[j].frame.height/2 }, enemies[j].type);
             this.playerBullets[i].die();
 	        }
         }

@@ -7,6 +7,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
   this.enemies = [];
   this.angle = 5;
   this.angleIncrement = 2;
+  this.direction = 1;
 
   if (enemyType.toLowerCase() === 'hank') {
     for (var i = 0; i < enemyCount; i++) {
@@ -82,10 +83,30 @@ EnemyManager.prototype.sine = function(speed, centerPoint, radius) {
   }
 };
 
-// Do that dougie
-// No seriously though, this moves the mans back and forth along the x axis
-EnemyManager.prototype.shuffle = function() {
-  
+/**
+ * Move the enemies horizontally until they hit a wall, then switch directions and move the other way
+ *
+ * @param Number units: The number of units to move each enmy
+ * @param Object bounds: The left and right bounds of the gameplay area
+ */
+EnemyManager.prototype.shuffle = function(units, bounds) {
+  var enemyCount = this.enemies.length;
+
+  if (this.direction === 1) {
+    var rightEnemy = this.getLastLivingEnemy();
+
+    if (rightEnemy && rightEnemy.frame.x + rightEnemy.frame.width >= bounds.right) {
+      this.direction = -1;
+    }
+  } else {
+    var firstEnemy = this.getFirstLivingEnemy();
+    if (firstEnemy && firstEnemy.frame.x <= bounds.left) {
+      this.direction = 1;
+    }
+  }
+  for (var i = 0; i < enemyCount; i++) {
+    this.enemies[i].frame.x += units * this.direction;
+  }
 };
 
 // Time to do stuff, bro.
@@ -102,4 +123,42 @@ EnemyManager.prototype.update = function(timeScalar) {
   for (var i = 0; i < length; i++) {
     this.enemies[i].frame.x += 1 * modifier * timeScalar;
   }
+};
+
+/**
+ * Return the first living enemy in the enemies array
+ *
+ * @return Object|null: Either the first living enemy or null if all enmies are dead
+ */
+EnemyManager.prototype.getFirstLivingEnemy = function() {
+  if (this.enemies[0].alive) {
+    return this.enemies[0];
+  }
+
+  for (var i = 1, l = this.enemies.length; i < l; i++) {
+    if (this.enemies[i].alive) {
+      return this.enemies[i];
+    }
+  }
+  return null;
+};
+
+/**
+ * Return the last living enemy in the enemies array
+ *
+ * @return Object|null: Either the last living enemy or null if all enemies are dead
+ */
+EnemyManager.prototype.getLastLivingEnemy = function() {
+  var enemyCount = this.enemies.length - 1;
+
+  if (this.enemies[enemyCount].alive) {
+    return this.enemies[enemyCount];
+  }
+
+  for (var i = enemyCount - 1; i >= 0; i--) {
+    if (this.enemies[i].alive) {
+      return this.enemies[i];
+    }
+  }
+  return null;
 };

@@ -52,6 +52,7 @@ GameEngine.prototype.update = function(dt) {
 
   var timeScalar = dt/2;
 
+  // only update positions if the game isn't paused
   if (!this.paused) {
     this.updatePlayer(this.getPressedKeys(), timeScalar);
     this.updateEnemies(timeScalar);

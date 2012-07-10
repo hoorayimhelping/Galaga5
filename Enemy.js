@@ -65,8 +65,8 @@ Brock.prototype.initialize = function(position) {
   this.sprite.frame = { x: 591, y: 163, width: 120, height: 128 };
   // y: 313 for purple
 
-  this.frame.width = this.sprite.frame.width/3;
-  this.frame.height = this.sprite.frame.height/3;
+  this.frame.width = this.sprite.frame.width / 3;
+  this.frame.height = this.sprite.frame.height / 3;
 
   this.type = 'brock';
 

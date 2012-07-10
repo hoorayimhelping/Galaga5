@@ -11,8 +11,8 @@ Player.prototype.initialize = function() {
   this.sprite.frame = { x: 241, y: 46, width: 136, height: 152 };
 
   // the sprite is too large, so we want to srhink it a bit
-  this.frame.width = this.sprite.frame.width/3;
-  this.frame.height = this.sprite.frame.height/3;
+  this.frame.width = this.sprite.frame.width / 3;
+  this.frame.height = this.sprite.frame.height / 3;
 
   return this;
 };

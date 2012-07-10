@@ -18,13 +18,6 @@ GameEngine.prototype.initialize = function(canvas) {
   this.playerBullets = [new Bullet().initialize(), new Bullet().initialize()];
   this.enemyBullets = [];
 
-  this.particleColors = {
-    blue: { r: 77, g: 109, b: 243, a: 1 },
-    yellow: { r: 255, g: 242, b: 0, a: 1 },
-    red: { r: 238, g: 28, b: 36, a: 1 },
-    pink: { r: 255, g: 163, b: 177, a: 1 },
-    purple: { r: 111, g: 49, b: 152, a: 1 }
-  };
   this.particleManagers = [];
   this.particleCount = 45;
 
@@ -166,7 +159,10 @@ GameEngine.prototype.detectCollisions = function() {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
-            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width / 2, y: enemies[j].frame.y + enemies[j].frame.height/2 }, enemies[j].type);
+            this.explode({ 
+                x: enemies[j].frame.x + enemies[j].frame.width / 2, 
+                y: enemies[j].frame.y + enemies[j].frame.height / 2
+              }, enemies[j].type);
             this.playerBullets[i].die();
 	        }
         }
@@ -208,19 +204,7 @@ GameEngine.prototype.explode = function(point, type) {
   }
 
   manager = manager || new ParticleManager();
-  manager.initialize(this.particleCount);
-
-  // TODO: move this down to enemies so logic doesn't need to be changed in several places every time
-  // a new enemy is added
-  if (type === 'hank') {
-    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]);
-  }
-  if (type === 'dean') {
-    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.pink]);
-  }
-  if (type === 'brock') {
-    manager.create(point, [this.particleColors.purple, this.particleColors.pink, this.particleColors.blue]);
-  }
+  manager.initialize(this.particleCount).create(point, type);
 
   // only push to the end of the array if it's a brand new manager
   if (manager !== this.particleManagers[i]) {

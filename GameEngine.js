@@ -21,10 +21,12 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleManagers = [];
   this.particleCount = 45;
 
-  this.hankManager = new EnemyManager().initialize('hank', 4);
-  this.deanManager = new EnemyManager().initialize('dean', 4);
+  this.topRowRight = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
+  this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
+  //this.hankManager = new EnemyManager().initialize('hank', 4);
+  //this.deanManager = new EnemyManager().initialize('dean', 4);
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
-  this.sineManager = new EnemyManager().initialize('sine_man', 1);
+  //this.sineManager = new EnemyManager().initialize('sine_man', 1);
   this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
@@ -87,7 +89,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
   this.deanCircleManager.circle(1.07, 230, 75);
-  this.sineManager.sine(1.07, 200, 105);
+  //this.sineManager.sine(1.07, 200, 105);
 
   this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.width });
 };
@@ -265,7 +267,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies.concat(this.deanManager.enemies, this.deanCircleManager.enemies, this.sineManager.enemies, this.shuffleManager.enemies);
+  return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies);
 };
 
 GameEngine.prototype.togglePause = function() {

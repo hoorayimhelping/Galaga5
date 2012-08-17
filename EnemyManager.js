@@ -1,9 +1,11 @@
 var EnemyManager = function() {};
 
 /**
- * @param String enemyType: The type of enemy to initialize [hank|dean|doc|brock]
+ * @param String enemyType: The type of enemy to spawn [hank|dean|doc|brock]
+ * @param Number enemyCount: The number of enemies to spawn
+ * @param Object startingCoordinates: Coordinates of first ship in the formation {x: 0, y: 0}
  */
-EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
+EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoordinates) {
   this.enemies = [];
   this.angle = 5;
   this.angleIncrement = 2;
@@ -38,7 +40,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount) {
   if (enemyType.toLowerCase() === 'shuffle_man') {
     for (var i = 0; i < enemyCount; i++) {
       //var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(new Brock().initialize({ y: 130, x: (i + 2) * 55 }));
+      this.enemies.push(new Brock().initialize({ y: 50, x: (i + 2) * 55 }));
     }
   }
 

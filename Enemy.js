@@ -1,3 +1,9 @@
+var Enemies = {
+  hankFrame: { x: 120, y: 240, width: 104, height: 80 },
+  deanFrame: { x: 628, y: 24, width: 104, height: 80 },
+  brockFrame: { x: 591, y: 163, width: 120, height: 128 }
+};
+
 Enemy.prototype = new Character();
 Enemy.prototype.constructor = Enemy;
 
@@ -26,7 +32,7 @@ Hank.prototype.constructor = Hank;
 Hank.prototype.initialize = function(position) {
   Enemy.prototype.initialize.call(this, position);
 
-  this.sprite.frame = { x: 120, y: 240, width: 104, height: 80 };
+  this.sprite.frame = Enemies.hankFrame;
 
   // the sprite is too large, so we want to srhink it a bit
   this.frame.width = this.sprite.frame.width/3;
@@ -45,7 +51,7 @@ Dean.prototype.constructor = Dean;
 Dean.prototype.initialize = function(position) {
   Enemy.prototype.initialize.call(this, position);
 
-  this.sprite.frame = { x: 628, y: 24, width: 104, height: 80 };
+  this.sprite.frame = Enemies.deanFrame;
 
   this.frame.width = this.sprite.frame.width/3;
   this.frame.height = this.sprite.frame.height/3;
@@ -62,7 +68,7 @@ Brock.prototype.constructor = Brock;
 Brock.prototype.initialize = function(position) {
   Enemy.prototype.initialize.call(this, position);
 
-  this.sprite.frame = { x: 591, y: 163, width: 120, height: 128 };
+  this.sprite.frame = Enemies.brockFrame;
   // y: 313 for purple
 
   this.frame.width = this.sprite.frame.width / 3;

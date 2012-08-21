@@ -21,7 +21,7 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleManagers = [];
   this.particleCount = 45;
 
-  this.topRowRight = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
+  this.topRowRight = new EnemyManager().initialize('hank', 10, { x: this.canvas.width / 2 - (Enemies.hankFrame.width / 2), y: 90 });
   this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
   //this.hankManager = new EnemyManager().initialize('hank', 4);
   //this.deanManager = new EnemyManager().initialize('dean', 4);
@@ -267,7 +267,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies);
+  return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies, this.topRowRight.enemies);
 };
 
 GameEngine.prototype.togglePause = function() {

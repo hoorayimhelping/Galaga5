@@ -12,6 +12,7 @@ PerformanceStats.prototype.initialize = function(onOff, element) {
   this.fps = 0;
   this.elapsedTime = 0;
   this.frames = 0;
+  this.enemies = 0;
 
   var fpsElement = document.createElement('p');
   element.appendChild(fpsElement);
@@ -23,11 +24,14 @@ PerformanceStats.prototype.initialize = function(onOff, element) {
  * Updates the stats based on the change in milliseconds
  *
  * @param Number dt: Number of miliseconds since last frame was rendered
+ * @param Number enemies: Number of enemies currently alive
  */
-PerformanceStats.prototype.update = function(dt) {
+PerformanceStats.prototype.update = function(dt, enemies) {
   this.elapsedTime += dt;
   this.fps += 1000/dt;
   this.frames++;
+
+  this.enemies = enemies;
 
   if (this.elapsedTime >= 100) {
     this.draw(dt);
@@ -38,7 +42,8 @@ PerformanceStats.prototype.update = function(dt) {
  * Draws the stats to the current html element's paragraph child
  */
 PerformanceStats.prototype.draw = function(dt) {
-  this.element.children[0].innerHTML = 'FPS: ' + (this.fps/this.frames).toFixed(2);
+  this.element.children[0].innerHTML = 'FPS: ' + (this.fps/this.frames).toFixed(2)
+  + '<br>Enemies: ' + this.enemies;
 
   this.elapsedTime = 0;
   this.fps = 0;

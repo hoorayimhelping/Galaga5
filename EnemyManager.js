@@ -13,7 +13,9 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
 
   if (enemyType.toLowerCase() === 'hank') {
     for (var i = 0; i < enemyCount; i++) {
-      this.enemies.push(new Hank().initialize({ x: startingCoordinates.x, y: startingCoordinates.y * -Enemies.hankFrame.height }));
+      this.enemies.push(new Hank().initialize(
+        { x: startingCoordinates.x, y: startingCoordinates.y - (i * Enemies.hank.frame.height) }
+      ));
     }
   }
 

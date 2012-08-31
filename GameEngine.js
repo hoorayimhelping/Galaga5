@@ -21,13 +21,16 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleManagers = [];
   this.particleCount = 45;
 
-  this.topRowRight = new EnemyManager().initialize('hank', 10, { x: this.canvas.width / 2 - (Enemies.hankFrame.width / 2), y: 90 });
-  this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
+  this.topRowRight = new EnemyManager().initialize('hank', 10,
+    { x: this.canvas.width / 2 - (Enemies.hank.frame.width / 2), y: 190 });
+  //this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
   //this.hankManager = new EnemyManager().initialize('hank', 4);
   //this.deanManager = new EnemyManager().initialize('dean', 4);
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
   //this.sineManager = new EnemyManager().initialize('sine_man', 1);
   this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
+
+console.log(this.topRowRight);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;

@@ -22,15 +22,10 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleCount = 45;
 
   this.topRowRight = new EnemyManager().initialize('hank', 10,
-    { x: this.canvas.width / 2 - (Enemies.hank.frame.width / 2), y: 190 });
+    { x: this.canvas.width / 2 - (Enemies.hank.frame.width / 2), y: -Enemies.hank.frame.height });
   //this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
-  //this.hankManager = new EnemyManager().initialize('hank', 4);
-  //this.deanManager = new EnemyManager().initialize('dean', 4);
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
-  //this.sineManager = new EnemyManager().initialize('sine_man', 1);
   this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
-
-console.log(this.topRowRight);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -48,8 +43,10 @@ GameEngine.prototype.update = function(dt) {
   this.renderer.clear();
   this.renderer.renderBackground();
 
+  var allEnemies = this.getAllEnemies();
+
   this.renderer.renderPlayer(this.player);
-  this.renderer.renderEnemies(this.getAllEnemies());
+  this.renderer.renderEnemies(allEnemies);
   this.renderer.renderBullets(this.playerBullets);
   if (this.particleManagers.length) {
     this.renderer.renderParticles(this.getAllParticles());
@@ -67,7 +64,14 @@ GameEngine.prototype.update = function(dt) {
   }
 
   if (this.performanceStats.on) {
-    this.performanceStats.update(dt);
+    var enemyCount = allEnemies.length,
+        livingEnemyCount = 0;
+    for (var i = 0; i < enemyCount; i++) {
+      if (allEnemies[i].alive) {
+        livingEnemyCount++;
+      }
+    }
+    this.performanceStats.update(dt, livingEnemyCount);
   }
 };
 

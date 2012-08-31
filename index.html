@@ -40,7 +40,9 @@
     var canvas = $('#canvas')[0];
 
     galagaEngine.initialize(canvas).togglePerformanceStats('on', $('#performance_stats')[0]).run();
-    $('#performance_stats').append('<a href="" id="reload_link">Reload</a>').delegate('#reload_link', 'click', function() {
+    $('#performance_stats')
+    .append('<a href="" id="reload_link">Reload</a>')
+    .delegate('#reload_link', 'click', function() {
       window.location.reload();
 
       return false;

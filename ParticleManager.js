@@ -13,6 +13,15 @@ ParticleManager.prototype.initialize = function(count) {
   this.deadCount = 0;
   this.active = true;
 
+  this.particleColors = {
+    blue: { r: 77, g: 109, b: 243, a: 1 },
+    yellow: { r: 255, g: 242, b: 0, a: 1 },
+    red: { r: 238, g: 28, b: 36, a: 1 },
+    pink: { r: 255, g: 163, b: 177, a: 1 },
+    purple: { r: 111, g: 49, b: 152, a: 1 },
+    green: { r: 34, g: 177, b: 76, a: 1 }
+  };
+
   this.gravity = .3;
   this.tolerance = 0.0009;
 
@@ -20,14 +29,25 @@ ParticleManager.prototype.initialize = function(count) {
 };
 
 /**
- * Create a particle explosion at origin. Sets the particles' accelerations and directions
+ * Create a particle explosion at origin. Sets the particles' colors, accelerations and directions
  *
  * @param Object origin: An object with x and y values representing the epicenter of the particle explosion
- * @param Array colors: An array of colors to use as particle colors
+ * @param String type: The type of the enemy exploding
  *
  * @return ParticleManager: Returns itself
  */
-ParticleManager.prototype.create = function(origin, colors) {
+ParticleManager.prototype.create = function(origin, type) {
+  var colors = [];
+  if (type === 'hank') {
+    colors = [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow];
+  }
+  if (type === 'dean') {
+    colors = [this.particleColors.blue, this.particleColors.red, this.particleColors.pink];
+  }
+  if (type === 'brock') {
+    colors = [this.particleColors.green, this.particleColors.yellow, this.particleColors.red];
+  }
+
   for (i = 0; i < this.particleCount; i++) {
     var particle = new Particle();
 

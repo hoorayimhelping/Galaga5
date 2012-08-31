@@ -1,3 +1,21 @@
+var Enemies = {
+  hank: {
+    sprite: { x: 120, y: 240, width: 104, height: 80 },
+  }, 
+  dean: {
+    sprite: { x: 628, y: 24, width: 104, height: 80 },
+  },
+  brock: {
+    // y: 313 for purple
+    sprite: { x: 591, y: 163, width: 120, height: 128 },
+  }
+};
+
+// sprites are too large, gotta shrink it some
+Enemies.hank.frame = { x: 0, y: 0, width: Enemies.hank.sprite.width / 3, height: Enemies.hank.sprite.height / 3 };
+Enemies.dean.frame = { x: 0, y: 0, width: Enemies.dean.sprite.width / 3, height: Enemies.dean.sprite.height / 3 };
+Enemies.brock.frame = { x: 0, y: 0, width: Enemies.brock.sprite.width / 3, height: Enemies.brock.sprite.height / 3 };
+
 Enemy.prototype = new Character();
 Enemy.prototype.constructor = Enemy;
 
@@ -18,11 +36,6 @@ Enemy.prototype.initialize = function(position) {
   return this;
 }
 
-Enemy.prototype.die = function() {
-  this.alive = false;
-  console.log('enemy die');
-};
-
 // Hank is the blue waspy guy
 var Hank = function() {};
 Hank.prototype = new Enemy();
@@ -31,11 +44,10 @@ Hank.prototype.constructor = Hank;
 Hank.prototype.initialize = function(position) {
   Enemy.prototype.initialize.call(this, position);
 
-  this.sprite.frame = { x: 120, y: 240, width: 104, height: 80 };
+  this.sprite.frame = Enemies.hank.sprite;
 
-  // the sprite is too large, so we want to srhink it a bit
-  this.frame.width = this.sprite.frame.width/3;
-  this.frame.height = this.sprite.frame.height/3;
+  this.frame.width = Enemies.hank.frame.width;
+  this.frame.height = Enemies.hank.frame.height;
 
   this.type = 'hank';
 
@@ -50,10 +62,10 @@ Dean.prototype.constructor = Dean;
 Dean.prototype.initialize = function(position) {
   Enemy.prototype.initialize.call(this, position);
 
-  this.sprite.frame = { x: 628, y: 24, width: 104, height: 80 };
+  this.sprite.frame = Enemies.dean.sprite;
 
-  this.frame.width = this.sprite.frame.width/3;
-  this.frame.height = this.sprite.frame.height/3;
+  this.frame.width = Enemies.dean.frame.width;
+  this.frame.height = Enemies.dean.frame.height
 
   this.type = 'dean';
 
@@ -67,10 +79,10 @@ Brock.prototype.constructor = Brock;
 Brock.prototype.initialize = function(position) {
   Enemy.prototype.initialize.call(this, position);
 
-  this.sprite.frame = { x: 591, y: 313, width: 120, height: 128 };
+  this.sprite.frame = Enemies.brock.sprite;
 
-  this.frame.width = this.sprite.frame.width/3;
-  this.frame.height = this.sprite.frame.height/3;
+  this.frame.width = Enemies.brock.frame.width;
+  this.frame.height = Enemies.brock.frame.height;
 
   this.type = 'brock';
 

@@ -18,21 +18,19 @@ GameEngine.prototype.initialize = function(canvas) {
   this.playerBullets = [new Bullet().initialize(), new Bullet().initialize()];
   this.enemyBullets = [];
 
-  this.particleColors = {
-    blue: { r: 77, g: 109, b: 243, a: 1 },
-    yellow: { r: 255, g: 242, b: 0, a: 1 },
-    red: { r: 238, g: 28, b: 36, a: 1 },
-    pink: { r: 255, g: 163, b: 177, a: 1 },
-    purple: { r: 111, g: 49, b: 152, a: 1 }
-  };
   this.particleManagers = [];
   this.particleCount = 45;
 
-  this.hankManager = new EnemyManager().initialize('hank', 4);
-  this.deanManager = new EnemyManager().initialize('dean', 4);
+  this.topRowRight = new EnemyManager().initialize('hank', 10,
+    { x: this.canvas.width / 2 - (Enemies.hank.frame.width / 2), y: 190 });
+  //this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
+  //this.hankManager = new EnemyManager().initialize('hank', 4);
+  //this.deanManager = new EnemyManager().initialize('dean', 4);
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
-  this.sineManager = new EnemyManager().initialize('sine_man', 1);
+  //this.sineManager = new EnemyManager().initialize('sine_man', 1);
   this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
+
+console.log(this.topRowRight);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -59,6 +57,7 @@ GameEngine.prototype.update = function(dt) {
 
   var timeScalar = dt/2;
 
+  // only update positions if the game isn't paused
   if (!this.paused) {
     this.updatePlayer(this.getPressedKeys(), timeScalar);
     this.updateEnemies(timeScalar);
@@ -93,7 +92,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
   this.deanCircleManager.circle(1.07, 230, 75);
-  this.sineManager.sine(1.07, 200, 105);
+  //this.sineManager.sine(1.07, 200, 105);
 
   this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.width });
 };
@@ -166,7 +165,10 @@ GameEngine.prototype.detectCollisions = function() {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
-            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width / 2, y: enemies[j].frame.y + enemies[j].frame.height/2 }, enemies[j].type);
+            this.explode({ 
+                x: enemies[j].frame.x + enemies[j].frame.width / 2, 
+                y: enemies[j].frame.y + enemies[j].frame.height / 2
+              }, enemies[j].type);
             this.playerBullets[i].die();
 	        }
         }
@@ -208,19 +210,7 @@ GameEngine.prototype.explode = function(point, type) {
   }
 
   manager = manager || new ParticleManager();
-  manager.initialize(this.particleCount);
-
-  // TODO: move this down to enemies so logic doesn't need to be changed in several places every time
-  // a new enemy is added
-  if (type === 'hank') {
-    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]);
-  }
-  if (type === 'dean') {
-    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.pink]);
-  }
-  if (type === 'brock') {
-    manager.create(point, [this.particleColors.purple, this.particleColors.pink, this.particleColors.blue]);
-  }
+  manager.initialize(this.particleCount).create(point, type);
 
   // only push to the end of the array if it's a brand new manager
   if (manager !== this.particleManagers[i]) {
@@ -280,7 +270,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies.concat(this.deanManager.enemies, this.deanCircleManager.enemies, this.sineManager.enemies, this.shuffleManager.enemies);
+  return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies, this.topRowRight.enemies);
 };
 
 GameEngine.prototype.togglePause = function() {

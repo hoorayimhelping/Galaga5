@@ -49,12 +49,15 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
   return this;
 };
 
-EnemyManager.prototype.initialAttack = function(timeScalar) {
-  
+EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
+
+  for (var i = 0, l = this.enemies.length; i < l; i++) {
+    this.enemies[i].frame.y += timeScalar;
+  }
 };
 
 /**
- * Make the mans do a cirlce I guess
+ * Make the dude do a circle I guess
  */
 EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
   var radians = (this.angle) * (Math.PI/180);

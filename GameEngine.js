@@ -160,12 +160,16 @@ GameEngine.prototype.getAllParticles = function() {
  * Determines which objects in the game world to test for collisions
  */
 GameEngine.prototype.detectCollisions = function() {
+  this.detectBulletCollisions();
+};
+
+GameEngine.prototype.detectBulletCollisions = function() {
   var enemies = this.getAllEnemies(),
     enemyCount = enemies.length,
     playerBulletCount = this.playerBullets.length;
 
   for (var i = 0; i < playerBulletCount; i++) {
-	  if (this.playerBullets[i].active) {
+    if (this.playerBullets[i].active) {
       for (var j = 0; j < enemyCount; j++) {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
@@ -175,10 +179,10 @@ GameEngine.prototype.detectCollisions = function() {
                 y: enemies[j].frame.y + enemies[j].frame.height / 2
               }, enemies[j].type);
             this.playerBullets[i].die();
-	        }
+          }
         }
-	    }
-	  }
+      }
+    }
   }
 };
 

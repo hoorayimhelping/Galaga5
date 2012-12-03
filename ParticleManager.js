@@ -19,7 +19,8 @@ ParticleManager.prototype.initialize = function(count) {
     red: { r: 238, g: 28, b: 36, a: 1 },
     pink: { r: 255, g: 163, b: 177, a: 1 },
     purple: { r: 111, g: 49, b: 152, a: 1 },
-    green: { r: 34, g: 177, b: 76, a: 1 }
+    green: { r: 34, g: 177, b: 76, a: 1 },
+    white: { r: 255, g: 255, b: 255, a: 1}
   };
 
   this.gravity = .3;
@@ -46,6 +47,9 @@ ParticleManager.prototype.create = function(origin, type) {
   }
   if (type === 'brock') {
     colors = [this.particleColors.green, this.particleColors.yellow, this.particleColors.red];
+  }
+  if (type == 'player') {
+    colors = [this.particleColors.white, this.particleColors.red, this.particleColors.white];
   }
 
   for (i = 0; i < this.particleCount; i++) {

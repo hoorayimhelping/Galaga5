@@ -161,6 +161,7 @@ GameEngine.prototype.getAllParticles = function() {
  */
 GameEngine.prototype.detectCollisions = function() {
   this.detectBulletCollisions();
+  this.detectPlayerCollisions();
 };
 
 GameEngine.prototype.detectBulletCollisions = function() {
@@ -185,6 +186,28 @@ GameEngine.prototype.detectBulletCollisions = function() {
     }
   }
 };
+
+  GameEngine.prototype.detectPlayerCollisions = function() {
+    var enemies = this.getAllEnemies();
+
+    for (var i = 0, l = enemies.length; i < l; i ++) {
+      if (enemies[i].alive) {
+        if (this.colliding(this.player ,enemies[i])) {
+          this.player.die();
+          this.explode({
+            x: this.player.frame.x + this.player.frame.width / 2,
+            y: this.player.frame.y + this.player.frame.height / 2
+          }, 'player');
+
+          enemies[i].die();
+          this.explode({ 
+            x: enemies[i].frame.x + enemies[i].frame.width / 2, 
+            y: enemies[i].frame.y + enemies[i].frame.height / 2
+          }, enemies[i].type);
+        }
+      }
+    }
+  };
 
 /**
  * Does rectangle-based collision detection

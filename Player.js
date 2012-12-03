@@ -18,7 +18,7 @@ Player.prototype.initialize = function() {
 };
 
 Player.prototype.die = function() {
-  console.log('player.die')
+  this.alive = false;
 };
 
 /**

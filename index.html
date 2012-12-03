@@ -13,7 +13,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="description" content="An HTML5 clone of Galaga Bucky Schwarz wrote to impress his girlfriend">
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="jquery.js"></script>
   <script type="text/javascript" src="InputManager.js"></script>
   <script type="text/javascript" src="Characters.js"></script>
   <script type="text/javascript" src="Player.js"></script>
@@ -40,19 +40,15 @@
     var canvas = $('#canvas')[0];
 
     galagaEngine.initialize(canvas).togglePerformanceStats('on', $('#performance_stats')[0]).run();
-    $('#performance_stats').append('<a href="" id="reload_link">Reload</a>').delegate('#reload_link', 'click', function() {
+    $('#performance_stats')
+    .append('<a href="" id="reload_link">Reload</a>')
+    .delegate('#reload_link', 'click', function() {
       window.location.reload();
 
       return false;
     });
   });
 
-  // Remove function provided by John Resig
-  Array.prototype.remove = function(from, to) {
-    var rest = this.slice((to || from) + 1 || this.length);
-    this.length = from < 0 ? this.length + from : from;
-    return this.push.apply(this, rest);
-  };
 </script>
 <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script> <script type="text/javascript">try {var pageTracker = _gat._getTracker("UA-4483501-2"); pageTracker._trackPageview();} catch(err) {}</script>
 </body>

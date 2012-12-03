@@ -18,17 +18,14 @@ GameEngine.prototype.initialize = function(canvas) {
   this.playerBullets = [new Bullet().initialize(), new Bullet().initialize()];
   this.enemyBullets = [];
 
-  this.particleColors = {
-    blue: { r: 77, g: 109, b: 243, a: 1 },
-    yellow: { r: 255, g: 242, b: 0, a: 1 },
-    red: { r: 238, g: 28, b: 36, a: 1 },
-    pink: { r: 255, g: 163, b: 177, a: 1 }
-  };
   this.particleManagers = [];
   this.particleCount = 45;
 
-  this.hankManager = new EnemyManager().initialize('hank', 4);
-  this.deanManager = new EnemyManager().initialize('dean', 4);
+  this.topRowRight = new EnemyManager().initialize('hank', 10,
+    { x: this.canvas.width / 2 - (Enemies.hank.frame.width / 2), y: -Enemies.hank.frame.height });
+  //this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
+  this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
+  this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
@@ -46,8 +43,10 @@ GameEngine.prototype.update = function(dt) {
   this.renderer.clear();
   this.renderer.renderBackground();
 
+  var allEnemies = this.getAllEnemies();
+
   this.renderer.renderPlayer(this.player);
-  this.renderer.renderEnemies(this.getAllEnemies());
+  this.renderer.renderEnemies(allEnemies);
   this.renderer.renderBullets(this.playerBullets);
   if (this.particleManagers.length) {
     this.renderer.renderParticles(this.getAllParticles());
@@ -55,6 +54,7 @@ GameEngine.prototype.update = function(dt) {
 
   var timeScalar = dt/2;
 
+  // only update positions if the game isn't paused
   if (!this.paused) {
     this.updatePlayer(this.getPressedKeys(), timeScalar);
     this.updateEnemies(timeScalar);
@@ -64,7 +64,14 @@ GameEngine.prototype.update = function(dt) {
   }
 
   if (this.performanceStats.on) {
-    this.performanceStats.update(dt);
+    var enemyCount = allEnemies.length,
+        livingEnemyCount = 0;
+    for (var i = 0; i < enemyCount; i++) {
+      if (allEnemies[i].alive) {
+        livingEnemyCount++;
+      }
+    }
+    this.performanceStats.update(dt, livingEnemyCount);
   }
 };
 
@@ -83,10 +90,16 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
 };
 
 /**
- * @param Number dt: Time change in milliseconds
+ * Updates all the enemies
+ *
+ * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
-//  this.hankManager.update(timeScalar);
+  this.deanCircleManager.circle(1.07, 230, 75);
+  //this.sineManager.sine(1.07, 200, 105);
+
+  this.topRowRight.initialAttack(timeScalar, { });
+  this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.width });
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -103,7 +116,7 @@ GameEngine.prototype.updateParticles = function(timeScalar) {
  * @param Object bullet: An inactive bullet from GameEngine's bullet list
  */
 GameEngine.prototype.fireBullet = function(bullet) {
-  bullet.frame.x = this.player.frame.x + (this.player.frame.width/2) - 4;
+  bullet.frame.x = this.player.frame.x + (this.player.frame.width / 2) - 4;
   bullet.frame.y = this.canvas.height - this.player.frame.height - 15;
   bullet.active = true;
 };
@@ -114,7 +127,7 @@ GameEngine.prototype.fireBullet = function(bullet) {
  * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateBullets = function(timeScalar) {
-  for (var i = 0, j = this.playerBullets.length; i < j; i++) {
+  for (var i = 0, l = this.playerBullets.length; i < l; i++) {
     if (this.playerBullets[i].active) {
       var bullet = this.playerBullets[i];
       if (bullet.frame.y + bullet.frame.height <= 0) {
@@ -147,24 +160,54 @@ GameEngine.prototype.getAllParticles = function() {
  * Determines which objects in the game world to test for collisions
  */
 GameEngine.prototype.detectCollisions = function() {
+  this.detectBulletCollisions();
+  this.detectPlayerCollisions();
+};
+
+GameEngine.prototype.detectBulletCollisions = function() {
   var enemies = this.getAllEnemies(),
-    enemyLength = enemies.length,
+    enemyCount = enemies.length,
     playerBulletCount = this.playerBullets.length;
 
   for (var i = 0; i < playerBulletCount; i++) {
-	  if (this.playerBullets[i].active) {
-      for (var j = 0; j < enemyLength; j++) {
+    if (this.playerBullets[i].active) {
+      for (var j = 0; j < enemyCount; j++) {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
-            this.explode({ x: enemies[j].frame.x + enemies[j].frame.width/2, y: enemies[j].frame.y + enemies[j].frame.height/2 }, enemies[j].type);
+            this.explode({ 
+                x: enemies[j].frame.x + enemies[j].frame.width / 2, 
+                y: enemies[j].frame.y + enemies[j].frame.height / 2
+              }, enemies[j].type);
             this.playerBullets[i].die();
-	        }
+          }
         }
-	    }
-	  }
+      }
+    }
   }
 };
+
+  GameEngine.prototype.detectPlayerCollisions = function() {
+    var enemies = this.getAllEnemies();
+
+    for (var i = 0, l = enemies.length; i < l; i ++) {
+      if (enemies[i].alive) {
+        if (this.colliding(this.player ,enemies[i])) {
+          this.player.die();
+          this.explode({
+            x: this.player.frame.x + this.player.frame.width / 2,
+            y: this.player.frame.y + this.player.frame.height / 2
+          }, 'player');
+
+          enemies[i].die();
+          this.explode({ 
+            x: enemies[i].frame.x + enemies[i].frame.width / 2, 
+            y: enemies[i].frame.y + enemies[i].frame.height / 2
+          }, enemies[i].type);
+        }
+      }
+    }
+  };
 
 /**
  * Does rectangle-based collision detection
@@ -199,14 +242,7 @@ GameEngine.prototype.explode = function(point, type) {
   }
 
   manager = manager || new ParticleManager();
-  manager.initialize(this.particleCount);
-
-  if (type === 'hank') {
-    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.yellow]);
-  }
-  if (type === 'dean') {
-    manager.create(point, [this.particleColors.blue, this.particleColors.red, this.particleColors.pink]);
-  }
+  manager.initialize(this.particleCount).create(point, type);
 
   // only push to the end of the array if it's a brand new manager
   if (manager !== this.particleManagers[i]) {
@@ -266,7 +302,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.hankManager.enemies.concat(this.deanManager.enemies);;
+  return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies, this.topRowRight.enemies);
 };
 
 GameEngine.prototype.togglePause = function() {

@@ -45,7 +45,10 @@ GameEngine.prototype.update = function(dt) {
 
   var allEnemies = this.getAllEnemies();
 
-  this.renderer.renderPlayer(this.player);
+  if (this.player.alive) {
+    this.renderer.renderPlayer(this.player);
+  }
+  
   this.renderer.renderEnemies(allEnemies);
   this.renderer.renderBullets(this.playerBullets);
   if (this.particleManagers.length) {
@@ -191,6 +194,9 @@ GameEngine.prototype.detectBulletCollisions = function() {
     var enemies = this.getAllEnemies();
 
     for (var i = 0, l = enemies.length; i < l; i ++) {
+      if (!this.player.alive) {
+        return;
+      }
       if (enemies[i].alive) {
         if (this.colliding(this.player ,enemies[i])) {
           this.player.die();

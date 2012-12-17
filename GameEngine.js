@@ -320,6 +320,8 @@ GameEngine.prototype.togglePause = function() {
  */
 GameEngine.prototype.fire = function() {
   if (this.paused) { return; }
+  if (!this.player.alive) { return; }
+
   for (var i = 0, j = this.playerBullets.length; i < j; i++) {
     if (!this.playerBullets[i].active) {
       this.fireBullet(this.playerBullets[i]);

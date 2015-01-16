@@ -1,6 +1,6 @@
 # Galaga5
 
-[A working version of where I am in development](http://hoorayimhelping.github.com/Galaga5/)
+[A working version of where I am in development](http://hoorayimhelping.github.com/Galaga5/) - i.e. where development stopped. I learned all I could from this project and have abandoned it. I also looked at it on my new 144hz monitor and it's kinda fast. Still much to learn.
 
 This is a clone of the arcade classic Galaga done in HTML5. The game engine and logic is written in JavaScript and rendered using HTML5's cavans tag and a 2d rendering context.
 
@@ -14,3 +14,5 @@ Escape pauses
 ## About
 
 I'm writing this because I've always wanted to make a video game, and I figured I'd start with a clone. I chose Galaga because my ex really enjoyed it as a kid and it seemed like a good way to impress her.
+
+I was working on this on the subway one day and the lady sitting next to me started talking to me about the game. She said it's so cool cause she remembered playing this game in the arcade as a kid and that I should definitely make it work on phones and tablets and if I did, she would play it. It was the best interaction I've ever had with a stranger in New York City.

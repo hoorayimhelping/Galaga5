@@ -12,7 +12,11 @@ GameEngine.prototype.initialize = function(canvas) {
   this.performanceStats = new PerformanceStats();
   this.renderer = new Renderer().initialize(this.canvas.getContext('2d'));
   this.player = new Player().initialize();
-  this.inputManager = new InputManager().initialize(this);
+  this.inputManager = new InputManager().initialize({
+    pause: this.togglePause.bind(this),
+    fire: this.fire.bind(this)
+  });
+
   this.paused = false;
 
   this.playerBullets = [new Bullet().initialize(), new Bullet().initialize()];
@@ -377,14 +381,14 @@ GameEngine.prototype.togglePerformanceStats = function(onOff, element) {
   return this;
 };
 
-GameEngine.prototype.run = function(element) {
-  var running,
-      lastFrame = +new Date,
-      that = this;
+GameEngine.prototype.run = function() {
+  var running;
+  var lastFrame = +new Date;
+  var that = this;
 
   function loop(now) {
     if (running !== false) {
-      window.requestAnimationFrame ? window.requestAnimationFrame(loop, element) : setTimeout(loop, 16);
+      window.requestAnimationFrame ? window.requestAnimationFrame(loop) : setTimeout(loop, 16);
       // Make sure to use a valid time, since:
       // - Chrome 10 doesn't return it at all
       // - setTimeout returns the actual timeout

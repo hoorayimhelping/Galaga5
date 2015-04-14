@@ -30,6 +30,8 @@ GameEngine.prototype.initialize = function(canvas) {
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
 
+  this.allEnemies = this.getAllEnemies();
+
   return this;
 };
 
@@ -44,11 +46,13 @@ GameEngine.prototype.update = function(dt) {
 
   // only update positions if the game isn't paused
   if (!this.paused) {
-    this.updatePlayer(this.getPressedKeys(), timeScalar);
-    this.updateEnemies(timeScalar);
-    this.updateBullets(timeScalar);
+    if (this.player.alive) {
+      this.updatePlayer(this.getPressedKeys(), timeScalar);
+      this.updateEnemies(timeScalar);
+      this.updateBullets(timeScalar);
+      this.detectCollisions();
+    }
     this.updateParticles(timeScalar/15);
-    this.detectCollisions();
   }
 
   this.render(dt);
@@ -62,9 +66,7 @@ GameEngine.prototype.render = function(dt) {
     this.renderer.renderPlayer(this.player);
   }
 
-  var allEnemies = this.getAllEnemies();
-
-  this.renderer.renderEnemies(allEnemies);
+  this.renderer.renderEnemies(this.allEnemies);
   this.renderer.renderBullets(this.playerBullets);
 
   if (this.particleManagers.length) {
@@ -72,10 +74,10 @@ GameEngine.prototype.render = function(dt) {
   }
 
   if (this.performanceStats.on) {
-    var enemyCount = allEnemies.length,
+    var enemyCount = this.allEnemies.length,
         livingEnemyCount = 0;
     for (var i = 0; i < enemyCount; i++) {
-      if (allEnemies[i].alive) {
+      if (this.allEnemies[i].alive) {
         livingEnemyCount++;
       }
     }

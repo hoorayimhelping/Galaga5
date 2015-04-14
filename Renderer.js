@@ -45,46 +45,11 @@ Renderer.prototype.renderPlayer = function(player) {
   this.renderCharacterSprite(player);
 };
 
-/**
- * @param Array enemies: An array of Enemy objects
- */
-Renderer.prototype.renderEnemies = function(enemies) {
-  for (var i = 0, l = enemies.length; i < l; i++) {
-    if (enemies[i].alive) {
-      this.context.drawImage(enemies[i].sprite, enemies[i].sprite.frame.x, enemies[i].sprite.frame.y,
-        enemies[i].sprite.frame.width, enemies[i].sprite.frame.height,
-        enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
-
-      //this.context.strokeStyle = '#F00';
-      //this.context.lineWidth = 2;
-      //this.context.strokeRect(enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
-    }
-  }
-}
 
 /**
- * Render all active bullets
+ * Render a single particle
  *
- * @param Array bullets: The array of player bullets
- */
-Renderer.prototype.renderBullets = function(bullets) {
-  for (var i = 0, l = bullets.length; i < l; i++) {
-    if (bullets[i].active) {
-      this.context.drawImage(bullets[i].sprite, bullets[i].sprite.frame.x, bullets[i].sprite.frame.y,
-        bullets[i].sprite.frame.width, bullets[i].sprite.frame.height,
-        bullets[i].frame.x, bullets[i].frame.y, bullets[i].frame.width, bullets[i].frame.height);
-
-        //this.context.strokeStyle = '#00F';
-        //this.context.lineWidth = 2;
-        //this.context.strokeRect(bullets[i].frame.x, bullets[i].frame.y, bullets[i].frame.width, bullets[i].frame.height);
-    }
-  }
-};
-
-/**
- * Render all active particles
- *
- * @param Array particles: The array of particles
+ * @param Object particle: the particle to render
  */
 Renderer.prototype.renderParticle = function(particle) {
   this.context.beginPath();

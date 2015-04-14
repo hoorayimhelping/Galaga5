@@ -49,7 +49,7 @@ Hank.prototype.initialize = function(position) {
   this.frame.width = Enemies.hank.frame.width;
   this.frame.height = Enemies.hank.frame.height;
 
-  this.type = 'hank';
+  this.characterType = 'hank';
 
   return this;
 };
@@ -67,7 +67,7 @@ Dean.prototype.initialize = function(position) {
   this.frame.width = Enemies.dean.frame.width;
   this.frame.height = Enemies.dean.frame.height
 
-  this.type = 'dean';
+  this.characterType = 'dean';
 
   return this;
 };
@@ -84,7 +84,7 @@ Brock.prototype.initialize = function(position) {
   this.frame.width = Enemies.brock.frame.width;
   this.frame.height = Enemies.brock.frame.height;
 
-  this.type = 'brock';
+  this.characterType = 'brock';
 
   return this;
 };

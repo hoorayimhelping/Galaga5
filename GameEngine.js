@@ -40,21 +40,6 @@ GameEngine.prototype.initialize = function(canvas) {
  *    under ideal circumstances, this will be 16 (1000/16 = 62.5 fps)
  */
 GameEngine.prototype.update = function(dt) {
-  this.renderer.clear();
-  this.renderer.renderBackground();
-
-  var allEnemies = this.getAllEnemies();
-
-  if (this.player.alive) {
-    this.renderer.renderPlayer(this.player);
-  }
-  
-  this.renderer.renderEnemies(allEnemies);
-  this.renderer.renderBullets(this.playerBullets);
-  if (this.particleManagers.length) {
-    this.renderer.renderParticles(this.getAllParticles());
-  }
-
   var timeScalar = dt/2;
 
   // only update positions if the game isn't paused
@@ -66,6 +51,26 @@ GameEngine.prototype.update = function(dt) {
     this.detectCollisions();
   }
 
+  this.render(dt);
+};
+
+GameEngine.prototype.render = function(dt) {
+  this.renderer.clear();
+  this.renderer.renderBackground();
+
+  if (this.player.alive) {
+    this.renderer.renderPlayer(this.player);
+  }
+
+  var allEnemies = this.getAllEnemies();
+
+  this.renderer.renderEnemies(allEnemies);
+  this.renderer.renderBullets(this.playerBullets);
+
+  if (this.particleManagers.length) {
+    this.renderer.renderParticles(this.getAllParticles());
+  }
+
   if (this.performanceStats.on) {
     var enemyCount = allEnemies.length,
         livingEnemyCount = 0;
@@ -75,8 +80,8 @@ GameEngine.prototype.update = function(dt) {
       }
     }
     this.performanceStats.update(dt, livingEnemyCount);
-  }
-};
+  }  
+}
 
 /**
  * Umbrella function that does general updates of the player in the game world
@@ -181,7 +186,7 @@ GameEngine.prototype.detectBulletCollisions = function() {
             this.explode({ 
                 x: enemies[j].frame.x + enemies[j].frame.width / 2, 
                 y: enemies[j].frame.y + enemies[j].frame.height / 2
-              }, enemies[j].type);
+              }, enemies[j].characterType);
             this.playerBullets[i].die();
           }
         }
@@ -209,7 +214,7 @@ GameEngine.prototype.detectBulletCollisions = function() {
           this.explode({ 
             x: enemies[i].frame.x + enemies[i].frame.width / 2, 
             y: enemies[i].frame.y + enemies[i].frame.height / 2
-          }, enemies[i].type);
+          }, enemies[i].characterType);
         }
       }
     }

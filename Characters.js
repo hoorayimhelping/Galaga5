@@ -12,6 +12,7 @@ Character.prototype.initialize = function() {
   this.acceleration = { x: 0, y: 0 };
   this.alive = true;
   this.sprite = '';
+  this.characterType = 'default';
 
   return this;
 };
@@ -21,6 +22,8 @@ Character.prototype.initialize = function() {
  */
 Character.prototype.die = function() {
   this.alive = false;
+
+  console.log(this.characterType, 'die');
 };
 
 /**

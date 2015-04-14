@@ -28,6 +28,12 @@ Renderer.prototype.renderBackground = function() {
   this.context.fill();
 };
 
+Renderer.prototype.renderCharacterSprite = function(character) {
+  this.context.drawImage(character.sprite, character.sprite.frame.x, character.sprite.frame.y,
+  character.sprite.frame.width, character.sprite.frame.height,
+  character.frame.x, character.frame.y, character.frame.width, character.frame.height);
+}
+
 /**
  * Render the player's location on the canvas based on the data in the player object
  * player.sprite is the Image object with an additional anonymous object appended
@@ -36,9 +42,7 @@ Renderer.prototype.renderBackground = function() {
  * @param Player player: The player object 
  */
 Renderer.prototype.renderPlayer = function(player) {
-  this.context.drawImage(player.sprite, player.sprite.frame.x, player.sprite.frame.y,
-	player.sprite.frame.width, player.sprite.frame.height,
-	player.frame.x, player.frame.y, player.frame.width, player.frame.height);
+  this.renderCharacterSprite(player);
 };
 
 /**

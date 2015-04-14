@@ -19,6 +19,9 @@ Player.prototype.initialize = function() {
 
 Player.prototype.die = function() {
   this.alive = false;
+  if (this.hasOwnProperty('type')) {
+    console.log(this.type);
+  }
 };
 
 /**

@@ -319,8 +319,7 @@ GameEngine.prototype.togglePause = function() {
  * A public/interface method currently used by InputManager to fire a player's bullet
  */
 GameEngine.prototype.fire = function() {
-  if (this.paused) { return; }
-  if (!this.player.alive) { return; }
+  if (this.paused || !this.player.alive) { return; }
 
   for (var i = 0, j = this.playerBullets.length; i < j; i++) {
     if (!this.playerBullets[i].active) {
@@ -344,34 +343,25 @@ GameEngine.prototype.togglePerformanceStats = function(onOff, element) {
   return this;
 };
 
-/**
- * Function to feature test browsers and provide an abstract way to animate
- * Please see https://gist.github.com/1114293#file_anim_loop_x.js
- */
-(function(window, Date) {
-  // feature testing
-  var raf = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame;
+GameEngine.prototype.run = function(element) {
+  var running,
+      lastFrame = +new Date,
+      that = this;
 
-  GameEngine.prototype.run = function(element) {
-    var running,
-        lastFrame = +new Date,
-        that = this;
-
-    function loop(now) {
-      if (running !== false) {
-        raf ? raf(loop, element) : setTimeout(loop, 16);
-        // Make sure to use a valid time, since:
-        // - Chrome 10 doesn't return it at all
-        // - setTimeout returns the actual timeout
-        now = now && now > 1E4 ? now : +new Date;
-        var dt = now - lastFrame;
-        // do not render frame when dt is too high
-        if (dt < 160) {
-          that.update(dt);
-        }
-        lastFrame = now;
+  function loop(now) {
+    if (running !== false) {
+      window.requestAnimationFrame ? window.requestAnimationFrame(loop, element) : setTimeout(loop, 16);
+      // Make sure to use a valid time, since:
+      // - Chrome 10 doesn't return it at all
+      // - setTimeout returns the actual timeout
+      now = now && now > 1E4 ? now : +new Date;
+      var dt = now - lastFrame;
+      // do not render frame when dt is too high
+      if (dt < 160) {
+        that.update(dt);
       }
+      lastFrame = now;
     }
-    loop();
-  };
-})(window, Date);
+  }
+  loop();
+};

@@ -1,9 +1,8 @@
 # Galaga5
 
-[A working version of where I am in development](http://hoorayimhelping.github.com/Galaga5/) - i.e. where development stopped. I learned all I could from this project and have abandoned it. I also looked at it on my new 144hz monitor and it's kinda fast. Still much to learn.
+[A working version of where I am in development](http://hoorayimhelping.github.com/Galaga5/)
 
-This is a clone of the arcade classic Galaga done in HTML5. The game engine and logic is written in JavaScript and rendered using HTML5's cavans tag and a 2d rendering context.
-
+This is a clone of the arcade classic Galaga done in HTML5. The game engine and logic is written in JavaScript and rendered using HTML5's cavans tag and a 2d rendering context. All handwritten by me cause why not.
 
 Arrow keys move left and right
 

@@ -59,7 +59,7 @@ EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
 /**
  * Make the dude do a circle I guess
  */
-EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
+EnemyManager.prototype.circle = function(timeScalar, centerPoint, radius) {
   var radians = (this.angle) * (Math.PI/180);
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
@@ -67,7 +67,7 @@ EnemyManager.prototype.circle = function(speed, centerPoint, radius) {
     this.enemies[i].frame.x = centerPoint + Math.cos(radians * (i%5)) * radius;
   }
 
-  this.angle += 2.3 * speed;
+  this.angle += 0.5 * timeScalar;
   if (this.angle > 360) {
     this.angle = 0;
   }
@@ -93,10 +93,10 @@ EnemyManager.prototype.sine = function(speed, centerPoint, radius) {
 /**
  * Move the enemies horizontally until they hit a wall, then switch directions and move the other way
  *
- * @param Number units: The number of units to move each enmy
+ * @param Number timeScalar: The amount of time since the last frame passed (ensures smooth animations across framerates)
  * @param Object bounds: The left and right bounds of the gameplay area
  */
-EnemyManager.prototype.shuffle = function(units, bounds) {
+EnemyManager.prototype.shuffle = function(timeScalar, bounds) {
   var enemyCount = this.enemies.length;
 
   if (this.direction === 1) {
@@ -112,7 +112,7 @@ EnemyManager.prototype.shuffle = function(units, bounds) {
     }
   }
   for (var i = 0; i < enemyCount; i++) {
-    this.enemies[i].frame.x += units * this.direction;
+    this.enemies[i].frame.x += timeScalar * this.direction;
   }
 };
 

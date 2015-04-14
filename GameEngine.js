@@ -98,7 +98,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
-  this.deanCircleManager.circle(1.07, 230, 75);
+  this.deanCircleManager.circle(timeScalar, 230, 75);
   //this.sineManager.sine(1.07, 200, 105);
 
   this.topRowRight.initialAttack(timeScalar, { });

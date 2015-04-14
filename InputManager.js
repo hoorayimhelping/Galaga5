@@ -1,6 +1,6 @@
 var InputManager = function() {};
 
-InputManager.prototype.initialize = function(engine) {
+InputManager.prototype.initialize = function(functions) {
   this.characters = {
     'leftArrow': false,
     'upArrow': false,
@@ -8,7 +8,7 @@ InputManager.prototype.initialize = function(engine) {
     'downArrow': false,
     'escape': false
   };
-  this.engine = engine;
+  this.engineFunctions = functions;
   this.bindShit();
 
   return this;
@@ -35,8 +35,7 @@ InputManager.prototype.clear = function() {
 }
 
 InputManager.prototype.bindShit = function() {
-  var self = this,
-      ret = true;
+  var ret = true;
 
   $('body, canvas').bind('keydown', function(e) {
     // ignore spacebar presses, so the keypress handler below can pick this event up
@@ -44,49 +43,49 @@ InputManager.prototype.bindShit = function() {
 
     // chrome handles escape strangely
     if (e.which == 27) {
-      self.engine.togglePause();
+      this.engineFunctions.pause();
     }
 
     if (e.which == 37) {
-      self.characters['leftArrow'] = true;
+      this.characters['leftArrow'] = true;
       ret = false;
     }
     if (e.which == 38) {
-      self.characters['upArrow'] = true;
+      this.characters['upArrow'] = true;
       ret = false;      
     }
     if (e.which == 39) {
-      self.characters['rightArrow'] = true;
+      this.characters['rightArrow'] = true;
       ret = false;
     }
     if (e.which == 40) {
-      self.characters['downArrow'] = true;
+      this.characters['downArrow'] = true;
       ret = false;
     }
 
     return ret;
-  }).bind('keyup', function(e) {
+  }.bind(this)).bind('keyup', function(e) {
     if (e.which == 37) {
-      self.characters['leftArrow'] = false;
+      this.characters['leftArrow'] = false;
       ret = false;
     }
     if (e.which == 38) {
-      self.characters['upArrow'] = false;
+      this.characters['upArrow'] = false;
       ret = false;
     }
     if (e.which == 39) {
-      self.characters['rightArrow'] = false;
+      this.characters['rightArrow'] = false;
       ret = false;
     }
     if (e.which == 40) {
-      self.characters['downArrow'] = false;
+      this.characters['downArrow'] = false;
       ret = false;
     }
     return ret;
-  }).bind('keypress', function(e) {
+  }.bind(this)).bind('keypress', function(e) {
     if (e.which == 32) {
-      self.engine.fire();
+      this.engineFunctions.fire();
     }
     return false;
-  });
+  }.bind(this));
 };

@@ -86,21 +86,16 @@ Renderer.prototype.renderBullets = function(bullets) {
  *
  * @param Array particles: The array of particles
  */
-Renderer.prototype.renderParticles = function(particles) {
-  for (var i = 0, l = particles.length; i < l; i++) {
-    if (!particles[i].alive) { continue; }
-    var particle = particles[i];
+Renderer.prototype.renderParticle = function(particle) {
+  this.context.beginPath();
+    this.context.arc(particle.position.x, particle.position.y, particle.radius, 0, Math.PI*2, true);
+  this.context.closePath();
 
-    this.context.beginPath();
-      this.context.arc(particle.position.x, particle.position.y, particle.radius, 0, Math.PI*2, true);
-    this.context.closePath();
+  this.context.fillStyle = particle.getFillStyle();
+  this.context.fill();
 
-    this.context.fillStyle = particle.getFillStyle();
-    this.context.fill();
-
-    if (particle.hasOwnProperty('strokeStyle') && particle.strokeStyle !== '') {
-      this.context.strokeStyle = particle.strokeStyle;
-      this.context.stroke();
-    }
+  if (particle.hasOwnProperty('strokeStyle') && particle.strokeStyle !== '') {
+    this.context.strokeStyle = particle.strokeStyle;
+    this.context.stroke();
   }
 };

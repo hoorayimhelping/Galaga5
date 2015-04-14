@@ -66,13 +66,18 @@ GameEngine.prototype.render = function(dt) {
     this.renderer.renderPlayer(this.player);
   }
 
-  this.renderer.renderEnemies(this.allEnemies);
-  this.renderer.renderBullets(this.playerBullets);
-
-  if (this.particleManagers.length) {
-    this.renderer.renderParticles(this.getAllParticles());
+  var allRenderableItems = this.getAllRenderableItems();
+  for (var i = 0; i < allRenderableItems.length; i++) {
+    this.renderer.renderCharacterSprite(allRenderableItems[i]);
   }
 
+  var particles = this.getAllParticles();
+  for (var i = 0, l = particles.length; i < l; i++) {
+    if (!particles[i].alive) { continue; }
+  
+    this.renderer.renderParticle(particles[i]);
+  }
+  
   if (this.performanceStats.on) {
     var enemyCount = this.allEnemies.length,
         livingEnemyCount = 0;
@@ -149,6 +154,17 @@ GameEngine.prototype.updateBullets = function(timeScalar) {
   }
 };
 
+GameEngine.prototype.getRenderableBullets = function() {
+  var renderableBullets = [];
+  for (var i = 0, l = this.playerBullets.length; i < l; i++) {
+    if (this.playerBullets[i].active) {
+      renderableBullets.push(this.playerBullets[i]);
+    }
+  }
+
+  return renderableBullets;
+};
+
 /**
  * Get all particles for rendering from active particle managers
  *
@@ -165,6 +181,17 @@ GameEngine.prototype.getAllParticles = function() {
 
   return particles;
 };
+
+GameEngine.prototype.getAllRenderableItems = function () {
+  var itemsToRender = [];
+  for (var i = 0; i < this.allEnemies.length; i++) {
+    if (this.allEnemies[i].alive) {
+      itemsToRender.push(this.allEnemies[i]);
+    }
+  }
+
+  return itemsToRender.concat(this.getRenderableBullets());
+}
 
 /**
  * Determines which objects in the game world to test for collisions

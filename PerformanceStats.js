@@ -12,7 +12,6 @@ PerformanceStats.prototype.initialize = function(onOff, element) {
   this.fps = 0;
   this.elapsedTime = 0;
   this.frames = 0;
-  this.enemies = 0;
 
   var fpsElement = document.createElement('p');
   element.appendChild(fpsElement);
@@ -28,24 +27,21 @@ PerformanceStats.prototype.initialize = function(onOff, element) {
  */
 PerformanceStats.prototype.update = function(dt, enemies) {
   this.elapsedTime += dt;
-  this.fps += 1000/dt;
+  this.fps += 1000 / dt;
   this.frames++;
 
-  this.enemies = enemies;
-
-  if (this.elapsedTime >= 100) {
-    this.draw(dt);
+  if (this.elapsedTime >= 1000 || this.elapsedTime <= 0) {
+    this.draw(dt, enemies);
+    this.elapsedTime = 0;
+    this.fps = 0;
+    this.frames = 0;
   }
 };
 
 /**
  * Draws the stats to the current html element's paragraph child
  */
-PerformanceStats.prototype.draw = function(dt) {
-  this.element.children[0].innerHTML = 'FPS: ' + (this.fps/this.frames).toFixed(2)
-  + '<br>Enemies: ' + this.enemies;
-
-  this.elapsedTime = 0;
-  this.fps = 0;
-  this.frames = 0;
+PerformanceStats.prototype.draw = function(dt, enemies) {
+  this.element.children[0].innerHTML = 'FPS: ' + (this.fps / this.frames).toFixed(2)
+  + '<br>Enemies: ' + enemies;
 };

@@ -28,6 +28,12 @@ Renderer.prototype.renderBackground = function() {
   this.context.fill();
 };
 
+Renderer.prototype.renderCharacterSprite = function(character) {
+  this.context.drawImage(character.sprite, character.sprite.frame.x, character.sprite.frame.y,
+  character.sprite.frame.width, character.sprite.frame.height,
+  character.frame.x, character.frame.y, character.frame.width, character.frame.height);
+}
+
 /**
  * Render the player's location on the canvas based on the data in the player object
  * player.sprite is the Image object with an additional anonymous object appended
@@ -36,67 +42,25 @@ Renderer.prototype.renderBackground = function() {
  * @param Player player: The player object 
  */
 Renderer.prototype.renderPlayer = function(player) {
-  this.context.drawImage(player.sprite, player.sprite.frame.x, player.sprite.frame.y,
-	player.sprite.frame.width, player.sprite.frame.height,
-	player.frame.x, player.frame.y, player.frame.width, player.frame.height);
+  this.renderCharacterSprite(player);
 };
 
-/**
- * @param Array enemies: An array of Enemy objects
- */
-Renderer.prototype.renderEnemies = function(enemies) {
-  for (var i = 0, l = enemies.length; i < l; i++) {
-    if (enemies[i].alive) {
-      this.context.drawImage(enemies[i].sprite, enemies[i].sprite.frame.x, enemies[i].sprite.frame.y,
-        enemies[i].sprite.frame.width, enemies[i].sprite.frame.height,
-        enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
-
-      //this.context.strokeStyle = '#F00';
-      //this.context.lineWidth = 2;
-      //this.context.strokeRect(enemies[i].frame.x, enemies[i].frame.y, enemies[i].frame.width, enemies[i].frame.height);
-    }
-  }
-}
 
 /**
- * Render all active bullets
+ * Render a single particle
  *
- * @param Array bullets: The array of player bullets
+ * @param Object particle: the particle to render
  */
-Renderer.prototype.renderBullets = function(bullets) {
-  for (var i = 0, l = bullets.length; i < l; i++) {
-    if (bullets[i].active) {
-      this.context.drawImage(bullets[i].sprite, bullets[i].sprite.frame.x, bullets[i].sprite.frame.y,
-        bullets[i].sprite.frame.width, bullets[i].sprite.frame.height,
-        bullets[i].frame.x, bullets[i].frame.y, bullets[i].frame.width, bullets[i].frame.height);
+Renderer.prototype.renderParticle = function(particle) {
+  this.context.beginPath();
+    this.context.arc(particle.position.x, particle.position.y, particle.radius, 0, Math.PI*2, true);
+  this.context.closePath();
 
-        //this.context.strokeStyle = '#00F';
-        //this.context.lineWidth = 2;
-        //this.context.strokeRect(bullets[i].frame.x, bullets[i].frame.y, bullets[i].frame.width, bullets[i].frame.height);
-    }
-  }
-};
+  this.context.fillStyle = particle.getFillStyle();
+  this.context.fill();
 
-/**
- * Render all active particles
- *
- * @param Array particles: The array of particles
- */
-Renderer.prototype.renderParticles = function(particles) {
-  for (var i = 0, l = particles.length; i < l; i++) {
-    if (!particles[i].alive) { continue; }
-    var particle = particles[i];
-
-    this.context.beginPath();
-      this.context.arc(particle.position.x, particle.position.y, particle.radius, 0, Math.PI*2, true);
-    this.context.closePath();
-
-    this.context.fillStyle = particle.getFillStyle();
-    this.context.fill();
-
-    if (particle.hasOwnProperty('strokeStyle') && particle.strokeStyle !== '') {
-      this.context.strokeStyle = particle.strokeStyle;
-      this.context.stroke();
-    }
+  if (particle.hasOwnProperty('strokeStyle') && particle.strokeStyle !== '') {
+    this.context.strokeStyle = particle.strokeStyle;
+    this.context.stroke();
   }
 };

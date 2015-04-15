@@ -26,15 +26,17 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleCount = 45;
 
   this.topRowRight = new EnemyManager().initialize('hank', 10,
-    { x: this.canvas.width / 2 - (Enemies.hank.frame.width / 2), y: -Enemies.hank.frame.height });
+    { x: this.canvas.clientWidth / 2 - (Enemies.hank.frame.width / 2), y: -Enemies.hank.frame.height });
   //this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
   this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
   this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
-  this.player.frame.y = this.canvas.height - this.player.frame.height * 1.1;
+  this.player.frame.y = this.canvas.clientHeight - this.player.frame.height * 1.1;
 
-  this.allEnemies = this.getAllEnemies();
+  this.allEnemies = 0;
+  this.allLivingEnemies = 0;
+  this.lastFrameTime = +new Date;
 
   return this;
 };
@@ -48,6 +50,9 @@ GameEngine.prototype.initialize = function(canvas) {
 GameEngine.prototype.update = function(dt) {
   var timeScalar = dt/2;
 
+  this.allEnemies = this.getAllEnemies();
+  this.allLivingEnemies = this.getAllLivingEnemies();
+
   // only update positions if the game isn't paused
   if (!this.paused) {
     if (this.player.alive) {
@@ -56,7 +61,7 @@ GameEngine.prototype.update = function(dt) {
       this.updateBullets(timeScalar);
       this.detectCollisions();
     }
-    this.updateParticles(timeScalar/15);
+    this.updateParticles(timeScalar / 15);
   }
 
   this.render(dt);
@@ -71,7 +76,7 @@ GameEngine.prototype.render = function(dt) {
   }
 
   var allRenderableItems = this.getAllRenderableItems();
-  for (var i = 0; i < allRenderableItems.length; i++) {
+  for (var i = 0, l = allRenderableItems.length; i < l; i++) {
     this.renderer.renderCharacterSprite(allRenderableItems[i]);
   }
 
@@ -81,16 +86,9 @@ GameEngine.prototype.render = function(dt) {
   
     this.renderer.renderParticle(particles[i]);
   }
-  
+
   if (this.performanceStats.on) {
-    var enemyCount = this.allEnemies.length,
-        livingEnemyCount = 0;
-    for (var i = 0; i < enemyCount; i++) {
-      if (this.allEnemies[i].alive) {
-        livingEnemyCount++;
-      }
-    }
-    this.performanceStats.update(dt, livingEnemyCount);
+    this.performanceStats.update(dt, this.allLivingEnemies.length);
   }  
 }
 
@@ -118,7 +116,7 @@ GameEngine.prototype.updateEnemies = function(timeScalar) {
   //this.sineManager.sine(1.07, 200, 105);
 
   this.topRowRight.initialAttack(timeScalar, { });
-  this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.width });
+  this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.clientWidth });
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -136,7 +134,7 @@ GameEngine.prototype.updateParticles = function(timeScalar) {
  */
 GameEngine.prototype.fireBullet = function(bullet) {
   bullet.frame.x = this.player.frame.x + (this.player.frame.width / 2) - 4;
-  bullet.frame.y = this.canvas.height - this.player.frame.height - 15;
+  bullet.frame.y = this.canvas.clientHeight - this.player.frame.height - 15;
   bullet.active = true;
 };
 
@@ -206,20 +204,19 @@ GameEngine.prototype.detectCollisions = function() {
 };
 
 GameEngine.prototype.detectBulletCollisions = function() {
-  var enemies = this.getAllEnemies(),
-    enemyCount = enemies.length,
-    playerBulletCount = this.playerBullets.length;
+  var enemyCount = this.allLivingEnemies.length;
+  var playerBulletCount = this.playerBullets.length;
 
   for (var i = 0; i < playerBulletCount; i++) {
     if (this.playerBullets[i].active) {
       for (var j = 0; j < enemyCount; j++) {
-        if (enemies[j].alive) {
-          if (this.colliding(enemies[j], this.playerBullets[i])) {
-            enemies[j].die();
+        if (this.allLivingEnemies[j].alive) {
+          if (this.colliding(this.allLivingEnemies[j], this.playerBullets[i])) {
+            this.allLivingEnemies[j].die();
             this.explode({ 
-                x: enemies[j].frame.x + enemies[j].frame.width / 2, 
-                y: enemies[j].frame.y + enemies[j].frame.height / 2
-              }, enemies[j].characterType);
+                x: this.allLivingEnemies[j].frame.x + this.allLivingEnemies[j].frame.width / 2, 
+                y: this.allLivingEnemies[j].frame.y + this.allLivingEnemies[j].frame.height / 2
+              }, this.allLivingEnemies[j].characterType);
             this.playerBullets[i].die();
           }
         }
@@ -229,12 +226,9 @@ GameEngine.prototype.detectBulletCollisions = function() {
 };
 
   GameEngine.prototype.detectPlayerCollisions = function() {
-    var enemies = this.getAllEnemies();
+    var enemies = this.allLivingEnemies;
 
     for (var i = 0, l = enemies.length; i < l; i ++) {
-      if (!this.player.alive) {
-        return;
-      }
       if (enemies[i].alive) {
         if (this.colliding(this.player ,enemies[i])) {
           this.player.die();
@@ -308,7 +302,7 @@ GameEngine.prototype.calculatePlayerMovement = function(movement, timeScalar) {
   if (this.player.frame.x <= 0 && movement.left > 0) { return 0; }
 
   // guard for player being at the right edge and hitting right
-  if (this.player.frame.x >= this.canvas.width - this.player.frame.width && movement.right > 0) { return 0; }
+  if (this.player.frame.x >= this.canvas.clientWidth - this.player.frame.width && movement.right > 0) { return 0; }
 
   var units = movement.right > 0 ? movement.right : movement.left;
   var modifier = movement.right > 0 ? 1 : -1;
@@ -349,6 +343,18 @@ GameEngine.prototype.getAllEnemies = function() {
   return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies, this.topRowRight.enemies);
 };
 
+GameEngine.prototype.getAllLivingEnemies = function() {
+  var livingEnemies = [];
+
+  for (var i = 0, l = this.allEnemies.length; i < l; i++) {
+    if (this.allEnemies[i].alive) {
+      livingEnemies.push(this.allEnemies[i]);
+    }
+  }
+
+  return livingEnemies;
+}
+
 GameEngine.prototype.togglePause = function() {
   this.paused = !this.paused;
 };
@@ -382,24 +388,14 @@ GameEngine.prototype.togglePerformanceStats = function(onOff, element) {
 };
 
 GameEngine.prototype.run = function() {
-  var running;
-  var lastFrame = +new Date;
-  var that = this;
+  requestAnimationFrame(this.run.bind(this));
 
-  function loop(now) {
-    if (running !== false) {
-      window.requestAnimationFrame ? window.requestAnimationFrame(loop) : setTimeout(loop, 16);
-      // Make sure to use a valid time, since:
-      // - Chrome 10 doesn't return it at all
-      // - setTimeout returns the actual timeout
-      now = now && now > 1E4 ? now : +new Date;
-      var dt = now - lastFrame;
-      // do not render frame when dt is too high
-      if (dt < 160) {
-        that.update(dt);
-      }
-      lastFrame = now;
-    }
+  var now = +new Date;
+  var dt = (now - this.lastFrameTime);
+
+  if (dt < 160) {
+    this.update(dt)
   }
-  loop();
+
+  this.lastFrameTime = now;
 };

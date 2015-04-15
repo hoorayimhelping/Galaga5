@@ -52,7 +52,7 @@ ParticleManager.prototype.create = function(origin, type) {
     colors = [this.particleColors.white, this.particleColors.red, this.particleColors.white];
   }
 
-  for (i = 0; i < this.particleCount; i++) {
+  for (var i = 0; i < this.particleCount; i++) {
     var particle = new Particle();
 
     particle.fill = colors[Math.floor(Math.random() * 3)]

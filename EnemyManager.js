@@ -41,7 +41,6 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
 
   if (enemyType.toLowerCase() === 'shuffle_man') {
     for (var i = 0; i < enemyCount; i++) {
-      //var man = i % 2 ? new Dean() : new Hank();
       this.enemies.push(new Brock().initialize({ y: 50, x: (i + 2) * 55 }));
     }
   }
@@ -111,6 +110,7 @@ EnemyManager.prototype.shuffle = function(timeScalar, bounds) {
       this.direction = 1;
     }
   }
+
   for (var i = 0; i < enemyCount; i++) {
     this.enemies[i].frame.x += timeScalar * this.direction;
   }
@@ -138,11 +138,7 @@ EnemyManager.prototype.update = function(timeScalar) {
  * @return Object|null: Either the first living enemy or null if all enmies are dead
  */
 EnemyManager.prototype.getFirstLivingEnemy = function() {
-  if (this.enemies[0].alive) {
-    return this.enemies[0];
-  }
-
-  for (var i = 1, l = this.enemies.length; i < l; i++) {
+  for (var i = 0, l = this.enemies.length; i < l; i++) {
     if (this.enemies[i].alive) {
       return this.enemies[i];
     }
@@ -158,11 +154,7 @@ EnemyManager.prototype.getFirstLivingEnemy = function() {
 EnemyManager.prototype.getLastLivingEnemy = function() {
   var enemyCount = this.enemies.length - 1;
 
-  if (this.enemies[enemyCount].alive) {
-    return this.enemies[enemyCount];
-  }
-
-  for (var i = enemyCount - 1; i >= 0; i--) {
+  for (var i = enemyCount; i >= 0; i--) {
     if (this.enemies[i].alive) {
       return this.enemies[i];
     }

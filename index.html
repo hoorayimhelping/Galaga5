@@ -40,6 +40,7 @@
     var canvas = $('#canvas')[0];
 
     galagaEngine.initialize(canvas).togglePerformanceStats('on', $('#performance_stats')[0]).run();
+
     $('#performance_stats')
     .append('<a href="" id="reload_link">Reload</a>')
     .delegate('#reload_link', 'click', function() {
@@ -48,12 +49,6 @@
       return false;
     });
   });
-
-  var i = 0;
-  var interval = setInterval(function() {
-    console.log(i);
-    i++;
-  }, 1000);
 </script>
 <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script> <script type="text/javascript">try {var pageTracker = _gat._getTracker("UA-4483501-2"); pageTracker._trackPageview();} catch(err) {}</script>
 </body>

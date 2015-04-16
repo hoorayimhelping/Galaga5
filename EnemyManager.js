@@ -51,14 +51,17 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
 EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
   this.initial_y_value = 350;
   this.second_y_value = this.initial_y_value + 100;
+  var modifier = 1;
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     var enemy = this.enemies[i];
 
+    modifier = (i % 2 === 0 ? 1 : -1);
+
     if (enemy.frame.y >= this.initial_y_value) {
-      this.enemies[i].frame.x -= timeScalar;
+      this.enemies[i].frame.x -= timeScalar * modifier;
       if (enemy.frame.y <= this.second_y_value) {
-        this.enemies[i].frame.y += timeScalar / 2;
+        this.enemies[i].frame.y += (timeScalar / 4);
       }
     } else {
       this.enemies[i].frame.y += timeScalar;

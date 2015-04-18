@@ -58,7 +58,7 @@ EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
     if (enemy.frame.y >= this.initial_y_value) {
       this.enemies[i].frame.x -= timeScalar * (i % 2 === 0 ? 1 : -1);
       if (enemy.frame.y <= this.second_y_value) {
-        this.enemies[i].frame.y += (timeScalar / 4);
+        this.enemies[i].frame.y += (timeScalar / 10);
       }
     } else {
       this.enemies[i].frame.y += timeScalar;

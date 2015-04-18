@@ -44,6 +44,11 @@ PerformanceStats.prototype.update = function(dt, enemies) {
  * Draws the stats to the current html element's paragraph child
  */
 PerformanceStats.prototype.draw = function(dt, enemies) {
-  this.element.children[0].innerHTML = 'FPS: ' + (this.fps / this.frames).toFixed(2)
+  var adjustedFPS = (this.fps / this.frames).toFixed(2);
+  if (isNaN(adjustedFPS) || !isFinite(adjustedFPS)) {
+    adjustedFPS = 'Calculating';
+  }
+
+  this.element.children[0].innerHTML = 'FPS: ' + adjustedFPS
   + '<br>Enemies: ' + enemies;
 };

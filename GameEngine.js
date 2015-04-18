@@ -406,3 +406,8 @@ GameEngine.prototype.run = function() {
 
   this.lastFrameTime = now;
 };
+
+GameEngine.prototype.startGame = function() {
+  this.run();
+  this.paused = false;
+};

@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="galaga.css">
 
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="description" content="An HTML5 clone of Galaga Bucky Schwarz wrote to impress his girlfriend">
+  <meta name="description" content="An HTML5 clone of Galaga Bucky Schwarz is currently writing">
 
   <script type="text/javascript" src="jquery.js"></script>
   <script type="text/javascript" src="InputManager.js"></script>
@@ -42,6 +42,8 @@
     galagaEngine.initialize(canvas)
                 .togglePerformanceStats('on', $('#performance_stats')[0])
                 .run();
+    
+    galagaEngine.paused = false;
 
     $('#performance_stats')
     .append('<a href="" id="reload_link">Reload</a>')

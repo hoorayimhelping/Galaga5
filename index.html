@@ -31,6 +31,7 @@
 <div id="performance_stats"></div>
 <div id="pause_menu"></div>
 <canvas id="canvas" width="465" height="600"></canvas>
+<!-- <h2><a id="start_game" href="">Start!</a></h2> -->
 <script type="text/javascript">
   // oh my jesus a freaking global variable! HALP!!!!
   SPRITESHEET_LOCATION = 'img/Galaga_Sprites_by_mammaDX.png';
@@ -40,10 +41,9 @@
     var canvas = $('#canvas')[0];
 
     galagaEngine.initialize(canvas)
-                .togglePerformanceStats('on', $('#performance_stats')[0])
-                .run();
+                .togglePerformanceStats('on', $('#performance_stats')[0]);
     
-    galagaEngine.paused = false;
+    
 
     $('#performance_stats')
     .append('<a href="" id="reload_link">Reload</a>')
@@ -52,7 +52,34 @@
 
       return false;
     });
+
+    startCountdown();
+    // $('#start_game').on('click', startCountdown);
   });
+
+  var countdown = 3;
+  var startCountdown = function() {
+    galagaEngine.renderCountdownText(countdown);
+
+    var interval = setInterval(function() {
+      if (countdown <= 1) {
+        clearInterval(interval);
+        return;
+      }
+
+      countdown--;
+      galagaEngine.renderCountdownText(countdown);
+    }, 1000);
+
+
+    setTimeout(function() {
+      galagaEngine.run();
+      galagaEngine.paused = false;
+    }, 3250);
+
+    return false;
+  };
+
 </script>
 <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));</script> <script type="text/javascript">try {var pageTracker = _gat._getTracker("UA-4483501-2"); pageTracker._trackPageview();} catch(err) {}</script>
 </body>

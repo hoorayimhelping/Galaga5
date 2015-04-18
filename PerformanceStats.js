@@ -10,11 +10,13 @@ PerformanceStats.prototype.initialize = function(onOff, element) {
   this.on = onOff == 'on' ? true : false;
   this.element = element;
   this.fps = 0;
-  this.elapsedTime = 0;
+  this.elapsedTime = 1000;
   this.frames = 0;
 
   var fpsElement = document.createElement('p');
   element.appendChild(fpsElement);
+
+  this.draw(0, 0);
 
   return this;
 };
@@ -30,7 +32,7 @@ PerformanceStats.prototype.update = function(dt, enemies) {
   this.fps += 1000 / dt;
   this.frames++;
 
-  if (this.elapsedTime >= 1000 || this.elapsedTime <= 0) {
+  if (this.elapsedTime >= 1000) {
     this.draw(dt, enemies);
     this.elapsedTime = 0;
     this.fps = 0;

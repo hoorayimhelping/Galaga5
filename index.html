@@ -25,7 +25,7 @@
   <script type="text/javascript" src="GameEngine.js"></script>
   <script type="text/javascript" src="Renderer.js"></script>
 
-  <title>Galaga | buckyschwarz point net</title>
+  <title>Galaga</title>
 </head>
 <body>
 <div id="performance_stats"></div>
@@ -39,7 +39,9 @@
   $(document).ready(function() {
     var canvas = $('#canvas')[0];
 
-    galagaEngine.initialize(canvas).togglePerformanceStats('on', $('#performance_stats')[0]).run();
+    galagaEngine.initialize(canvas)
+                .togglePerformanceStats('on', $('#performance_stats')[0])
+                .run();
 
     $('#performance_stats')
     .append('<a href="" id="reload_link">Reload</a>')

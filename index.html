@@ -72,7 +72,7 @@
     }, 1000);
 
 
-    setTimeout(galagaEngine.startGame, 3250);
+    setTimeout(galagaEngine.startGame.bind(galagaEngine), 3250);
 
     return false;
   };

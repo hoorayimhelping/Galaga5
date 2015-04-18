@@ -17,7 +17,7 @@ GameEngine.prototype.initialize = function(canvas) {
     fire: this.fire.bind(this)
   });
 
-  this.paused = false;
+  this.paused = true;
 
   this.playerBullets = [new Bullet().initialize(), new Bullet().initialize()];
   this.enemyBullets = [];
@@ -37,6 +37,9 @@ GameEngine.prototype.initialize = function(canvas) {
   this.allEnemies = 0;
   this.allLivingEnemies = 0;
   this.lastFrameTime = +new Date;
+
+  this.renderer.clear();
+  this.renderer.renderBackground();
 
   return this;
 };
@@ -371,6 +374,10 @@ GameEngine.prototype.fire = function() {
       return;
     }
   }
+};
+
+GameEngine.prototype.renderCountdownText = function(countdown) {
+  this.renderer.renderCountdownText(countdown);
 };
 
 /**

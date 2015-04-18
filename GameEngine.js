@@ -376,6 +376,10 @@ GameEngine.prototype.fire = function() {
   }
 };
 
+GameEngine.prototype.renderCountdownText = function(countdown) {
+  this.renderer.renderCountdownText(countdown);
+};
+
 /**
  * Toggles performance stat meter display
  *

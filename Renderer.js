@@ -64,3 +64,13 @@ Renderer.prototype.renderParticle = function(particle) {
     this.context.stroke();
   }
 };
+
+Renderer.prototype.renderCountdownText = function(countdown) {
+  this.clear();
+  this.renderBackground();
+
+  this.context.font = "48px Helvetica";
+  this.context.fillStyle = 'white';
+  this.context.fillText(countdown, 200, 300);
+  console.log(countdown);
+};

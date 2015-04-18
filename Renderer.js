@@ -16,7 +16,7 @@ Renderer.prototype.initialize = function(context) {
  * Under most circumstance, this will be called once a frame.
  */
 Renderer.prototype.clear = function() {
-  this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+  this.context.clearRect(0, 0, this.context.canvas.clientWidth, this.context.canvas.clientHeight);
 };
 
 /**
@@ -24,7 +24,7 @@ Renderer.prototype.clear = function() {
  */
 Renderer.prototype.renderBackground = function() {
   this.context.fillStyle = "rgba(0, 0, 0, 1)";
-  this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+  this.context.fillRect(0, 0, this.context.canvas.clientWidth, this.context.canvas.clientHeight);
   this.context.fill();
 };
 
@@ -71,6 +71,5 @@ Renderer.prototype.renderCountdownText = function(countdown) {
 
   this.context.font = "48px Helvetica";
   this.context.fillStyle = 'white';
-  this.context.fillText(countdown, 200, 300);
-  console.log(countdown);
+  this.context.fillText(countdown, this.context.canvas.clientWidth / 2, this.context.canvas.clientHeight / 2);
 };

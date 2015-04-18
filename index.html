@@ -53,7 +53,7 @@
       return false;
     });
 
-    startCountdown();
+    galagaEngine.startGame();// startCountdown(); will use later, slows down development
     // $('#start_game').on('click', startCountdown);
   });
 
@@ -72,10 +72,7 @@
     }, 1000);
 
 
-    setTimeout(function() {
-      galagaEngine.run();
-      galagaEngine.paused = false;
-    }, 3250);
+    setTimeout(galagaEngine.startGame, 3250);
 
     return false;
   };

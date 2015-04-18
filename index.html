@@ -53,6 +53,7 @@
       return false;
     });
 
+    // galagaEngine.startGame();
     startCountdown();
     // $('#start_game').on('click', startCountdown);
   });
@@ -72,10 +73,7 @@
     }, 1000);
 
 
-    setTimeout(function() {
-      galagaEngine.run();
-      galagaEngine.paused = false;
-    }, 3250);
+    setTimeout(galagaEngine.startGame.bind(galagaEngine), 3250);
 
     return false;
   };

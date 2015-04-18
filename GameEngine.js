@@ -34,8 +34,8 @@ GameEngine.prototype.initialize = function(canvas) {
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.clientHeight - this.player.frame.height * 1.1;
 
-  this.allEnemies = 0;
-  this.allLivingEnemies = 0;
+  this.allEnemies = this.getAllEnemies();
+  this.allLivingEnemies = this.getAllLivingEnemies();
   this.lastFrameTime = +new Date;
 
   this.renderer.clear();
@@ -90,9 +90,7 @@ GameEngine.prototype.render = function(dt) {
     this.renderer.renderParticle(particles[i]);
   }
 
-  if (this.performanceStats.on) {
-    this.performanceStats.update(dt, this.allLivingEnemies.length);
-  }  
+  this.updatePerfStats(dt);
 }
 
 /**
@@ -410,4 +408,12 @@ GameEngine.prototype.run = function() {
 GameEngine.prototype.startGame = function() {
   this.run();
   this.paused = false;
+
+  this.updatePerfStats(1000);
 };
+
+GameEngine.prototype.updatePerfStats = function(dt) {
+  if (this.performanceStats.on) {
+    this.performanceStats.update(dt, this.allLivingEnemies.length);
+  }  
+}

@@ -56,7 +56,7 @@ EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     var enemy = this.enemies[i];
     if (!enemy.alive) {
-      return;
+      continue;
     }
 
     if (enemy.frame.y >= this.initial_y_value) {

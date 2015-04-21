@@ -10,6 +10,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
   this.angle = 5;
   this.angleIncrement = 2;
   this.direction = 1;
+  this.startingCoordinates = startingCoordinates;
 
   if (enemyType.toLowerCase() === 'hank') {
     for (var i = 0; i < enemyCount; i++) {
@@ -54,14 +55,22 @@ EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     var enemy = this.enemies[i];
+    if (!enemy.alive) {
+      return;
+    }
 
     if (enemy.frame.y >= this.initial_y_value) {
-      this.enemies[i].frame.x -= timeScalar * (i % 2 === 0 ? 1 : -1);
+      enemy.frame.x -= timeScalar * (i % 2 === 0 ? 1 : -1);
       if (enemy.frame.y <= this.second_y_value) {
-        this.enemies[i].frame.y += (timeScalar / 10);
+        enemy.frame.y += (timeScalar / 10);
       }
     } else {
-      this.enemies[i].frame.y += timeScalar;
+      enemy.frame.y += timeScalar;
+    }
+
+    if (enemy.frame.x >= bounds.right || enemy.frame.x <= bounds.left) {
+      enemy.frame.x = this.startingCoordinates.x;
+      enemy.frame.y = this.startingCoordinates.y - (i * enemy.frame.height);
     }
   }
 };

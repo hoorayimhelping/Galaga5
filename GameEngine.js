@@ -116,7 +116,7 @@ GameEngine.prototype.updateEnemies = function(timeScalar) {
   this.deanCircleManager.circle(timeScalar, 230, 75);
   //this.sineManager.sine(1.07, 200, 105);
 
-  this.topRowRight.initialAttack(timeScalar, { });
+  this.topRowRight.initialAttack(timeScalar, { left: 0, right: this.canvas.clientWidth });
   this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.clientWidth });
 };
 

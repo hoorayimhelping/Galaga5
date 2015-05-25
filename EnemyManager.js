@@ -50,8 +50,8 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
 };
 
 EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
-  this.initial_y_value = 350;
-  this.second_y_value = this.initial_y_value + 100;
+  this.first_movement_change_height = 350;
+  this.second_movement_change_height = this.first_movement_change_height + 100;
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     var enemy = this.enemies[i];
@@ -59,10 +59,14 @@ EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
       continue;
     }
 
-    if (enemy.frame.y >= this.initial_y_value) {
-      enemy.frame.x -= timeScalar * (i % 2 === 0 ? 1 : -1);
-      if (enemy.frame.y <= this.second_y_value) {
-        enemy.frame.y += (timeScalar / 10);
+    if (enemy.frame.y >= this.first_movement_change_height) {
+      
+      enemy.frame.x -= Math.pow(timeScalar, 0.5) * (i % 2 === 0 ? 1 : -1);
+      enemy.frame.y += (timeScalar / 2);
+
+      if (enemy.frame.y <= this.second_movement_change_height) {
+        enemy.frame.y -= (timeScalar / 10);
+        enemy.frame.x += Math.pow(timeScalar, 0.9) * (i % 2 === 0 ? 1 : -1);
       }
     } else {
       enemy.frame.y += timeScalar;

@@ -26,21 +26,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
     }
   }
 
-  if (enemyType.toLowerCase() === 'circle_man') {
-    for (var i = 0; i < enemyCount; i++) {
-      var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(man.initialize({ y: 130, x: (i + 2) * 55 }));
-    }
-  }
-
-  if (enemyType.toLowerCase() === 'sine_man') {
-    for (var i = 0; i < enemyCount; i++) {
-      var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(man.initialize({ y: 170, x: (i + 2) * 55 }));
-    }
-  }
-
-  if (enemyType.toLowerCase() === 'shuffle_man') {
+  if (enemyType.toLowerCase() === 'brock') {
     for (var i = 0; i < enemyCount; i++) {
       this.enemies.push(new Brock().initialize({ y: 50, x: (i + 2) * 55 }));
     }
@@ -49,7 +35,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
   return this;
 };
 
-EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
+EnemyManager.prototype.firstWave = function(timeScalar, bounds) {
   this.first_movement_change_height = 350;
   this.second_movement_change_height = this.first_movement_change_height + 100;
 
@@ -64,17 +50,16 @@ EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
       enemy.frame.x -= Math.pow(timeScalar, 0.5) * (i % 2 === 0 ? 1 : -1);
       enemy.frame.y += (timeScalar / 2);
 
-      if (enemy.frame.y <= this.second_movement_change_height) {
-        enemy.frame.y -= (timeScalar / 10);
-        enemy.frame.x += Math.pow(timeScalar, 0.9) * (i % 2 === 0 ? 1 : -1);
+      if (enemy.frame.y >= this.second_movement_change_height) {
+        enemy.frame.y = enemy.frame.y;
+        enemy.frame.x -= Math.pow(timeScalar, 0.9) * (i % 2 === 0 ? 1 : -1);
       }
     } else {
       enemy.frame.y += timeScalar;
     }
 
     if (enemy.frame.x >= bounds.right || enemy.frame.x <= bounds.left) {
-      enemy.frame.x = this.startingCoordinates.x;
-      enemy.frame.y = this.startingCoordinates.y - (i * enemy.frame.height);
+      enemy.die();
     }
   }
 };

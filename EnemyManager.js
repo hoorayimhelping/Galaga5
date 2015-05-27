@@ -10,6 +10,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
   this.angle = 5;
   this.angleIncrement = 2;
   this.direction = 1;
+  this.startingCoordinates = startingCoordinates;
 
   if (enemyType.toLowerCase() === 'hank') {
     for (var i = 0; i < enemyCount; i++) {
@@ -25,21 +26,7 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
     }
   }
 
-  if (enemyType.toLowerCase() === 'circle_man') {
-    for (var i = 0; i < enemyCount; i++) {
-      var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(man.initialize({ y: 130, x: (i + 2) * 55 }));
-    }
-  }
-
-  if (enemyType.toLowerCase() === 'sine_man') {
-    for (var i = 0; i < enemyCount; i++) {
-      var man = i % 2 ? new Dean() : new Hank();
-      this.enemies.push(man.initialize({ y: 170, x: (i + 2) * 55 }));
-    }
-  }
-
-  if (enemyType.toLowerCase() === 'shuffle_man') {
+  if (enemyType.toLowerCase() === 'brock') {
     for (var i = 0; i < enemyCount; i++) {
       this.enemies.push(new Brock().initialize({ y: 50, x: (i + 2) * 55 }));
     }
@@ -48,20 +35,31 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
   return this;
 };
 
-EnemyManager.prototype.initialAttack = function(timeScalar, bounds) {
-  this.initial_y_value = 350;
-  this.second_y_value = this.initial_y_value + 100;
+EnemyManager.prototype.firstWave = function(timeScalar, bounds) {
+  this.first_movement_change_height = 350;
+  this.second_movement_change_height = this.first_movement_change_height + 100;
 
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     var enemy = this.enemies[i];
+    if (!enemy.alive) {
+      continue;
+    }
 
-    if (enemy.frame.y >= this.initial_y_value) {
-      this.enemies[i].frame.x -= timeScalar * (i % 2 === 0 ? 1 : -1);
-      if (enemy.frame.y <= this.second_y_value) {
-        this.enemies[i].frame.y += (timeScalar / 10);
+    if (enemy.frame.y >= this.first_movement_change_height) {
+      
+      enemy.frame.x -= Math.pow(timeScalar, 0.5) * (i % 2 === 0 ? 1 : -1);
+      enemy.frame.y += (timeScalar / 2);
+
+      if (enemy.frame.y >= this.second_movement_change_height) {
+        enemy.frame.y = enemy.frame.y;
+        enemy.frame.x -= Math.pow(timeScalar, 0.9) * (i % 2 === 0 ? 1 : -1);
       }
     } else {
-      this.enemies[i].frame.y += timeScalar;
+      enemy.frame.y += timeScalar;
+    }
+
+    if (enemy.frame.x >= bounds.right || enemy.frame.x <= bounds.left) {
+      enemy.die();
     }
   }
 };

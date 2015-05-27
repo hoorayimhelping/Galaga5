@@ -11,11 +11,11 @@ GameEngine.prototype.initialize = function(canvas) {
   this.canvas = canvas;
   this.performanceStats = new PerformanceStats();
   this.renderer = new Renderer().initialize(this.canvas.getContext('2d'));
-  this.player = new Player().initialize();
   this.inputManager = new InputManager().initialize({
     pause: this.togglePause.bind(this),
     fire: this.fire.bind(this)
   });
+  this.enemiesPerSquad = 10;
 
   this.paused = true;
 
@@ -25,11 +25,15 @@ GameEngine.prototype.initialize = function(canvas) {
   this.particleManagers = [];
   this.particleCount = 45;
 
-  this.topRowRight = new EnemyManager().initialize('hank', 10,
-    { x: this.canvas.clientWidth / 2 - (Enemies.hank.frame.width / 2), y: -Enemies.hank.frame.height });
-  //this.topRowLeft = new EnemyManager().initialize('hank', 10, { x: 0, y: 0 });
-  this.deanCircleManager = new EnemyManager().initialize('circle_man', 6);
-  this.shuffleManager = new EnemyManager().initialize('shuffle_man', 5);
+  this.player = new Player().initialize();
+  this.player.frame.x = (this.canvas.clientWidth / 2) - (this.player.frame.width / 2);
+  this.player.frame.y = this.canvas.clientHeight;
+
+  this.topRowRight = new EnemyManager().initialize('hank', this.enemiesPerSquad, {
+      x: this.canvas.clientWidth / 2 - (Enemies.hank.frame.width / 2),
+      y: -Enemies.hank.frame.height
+    });
+  //this.topRowLeft = new EnemyManager().initialize('hank', this.enemiesPerSquad, { x: 0, y: 0 });
 
   // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
   this.player.frame.y = this.canvas.clientHeight - this.player.frame.height * 1.1;
@@ -113,11 +117,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
-  this.deanCircleManager.circle(timeScalar, 230, 75);
-  //this.sineManager.sine(1.07, 200, 105);
-
-  this.topRowRight.initialAttack(timeScalar, { });
-  this.shuffleManager.shuffle(timeScalar, { 'left': 0, 'right': this.canvas.clientWidth });
+  this.topRowRight.firstWave(timeScalar, { left: 0, right: this.canvas.clientWidth });
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -255,7 +255,6 @@ GameEngine.prototype.detectPlayerCollisions = function() {
  * @param Bullet bullet: The bullet being fired
  */
 GameEngine.prototype.colliding = function(ship, bullet) {
-
   /* If the following evaluates to true, the two rectangles are not colliding
      (ship.bottom < bullet.top) || (ship.top > bullet.bottom) ||
 	 (ship.left > bullet.right) || (ship.right < bullet.left) */
@@ -341,7 +340,7 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.deanCircleManager.enemies.concat(this.shuffleManager.enemies, this.topRowRight.enemies);
+  return this.topRowRight.enemies.concat([]);
 };
 
 GameEngine.prototype.getAllLivingEnemies = function() {

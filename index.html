@@ -46,15 +46,15 @@
     
 
     $('#performance_stats')
-    .append('<a href="" id="reload_link">Reload</a>')
+    .append('<a href="" id="reload_link">Restart</a>')
     .on('click', '#reload_link', function() {
       window.location.reload();
 
       return false;
     });
 
-    // galagaEngine.startGame();
-    startCountdown();
+    galagaEngine.startGame();
+    // startCountdown();
     // $('#start_game').on('click', startCountdown);
   });
 

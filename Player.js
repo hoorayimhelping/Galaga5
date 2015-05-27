@@ -4,11 +4,12 @@ Player.prototype.constructor = Player;
 Player.prototype.initialize = function() {
   Character.prototype.initialize.call(this);
 
-  this.frame = { x: 270, y: 300 };
+  this.frame = { x: 0, y: 0 };
 
   this.sprite = new Image(); 
   this.sprite.src = SPRITESHEET_LOCATION;
   this.sprite.frame = { x: 241, y: 46, width: 136, height: 152 };
+  this.characterType = 'player';
 
   // the sprite is too large, so we want to srhink it a bit
   this.frame.width = this.sprite.frame.width / 3;

@@ -29,13 +29,18 @@ GameEngine.prototype.initialize = function(canvas) {
   this.player.frame.x = (this.canvas.clientWidth / 2) - (this.player.frame.width / 2);
   this.player.frame.y = this.canvas.clientHeight;
 
-  this.topRowRight = new EnemyManager().initialize('hank', this.enemiesPerSquad, {
-      x: this.canvas.clientWidth / 2 - (Enemies.hank.frame.width / 2),
-      y: -Enemies.hank.frame.height
-    });
-  //this.topRowLeft = new EnemyManager().initialize('hank', this.enemiesPerSquad, { x: 0, y: 0 });
+  this.firstWave = new EnemyManager().initialize('firstWave', this.enemiesPerSquad, {
+    x: this.canvas.clientWidth / 2 - (Enemies.hank.frame.width / 2),
+    y: -Enemies.hank.frame.height
+  });
+  // this.firstWave.renderable = true;
 
-  // this puts the player's ship at the bottom of the screen and offsets it by the ship's height and a few extra pixels
+  this.secondWave = new EnemyManager().initialize('secondWave', this.enemiesPerSquad, {
+    x: (this.canvas.clientWidth / 2) - (Enemies.dean.frame.width * 2.9),
+    y: -Enemies.dean.frame.height
+  });
+  this.secondWave.renderable = true;
+
   this.player.frame.y = this.canvas.clientHeight - this.player.frame.height * 1.1;
 
   this.allEnemies = this.getAllEnemies();
@@ -117,7 +122,7 @@ GameEngine.prototype.updatePlayer = function(keys, timeScalar) {
  * @param Number timeScalar: Time since last frame adjusted by game engine
  */
 GameEngine.prototype.updateEnemies = function(timeScalar) {
-  this.topRowRight.firstWave(timeScalar, { left: 0, right: this.canvas.clientWidth });
+  this.firstWave.firstWave(timeScalar, { left: 0, right: this.canvas.clientWidth });
 };
 
 GameEngine.prototype.updateParticles = function(timeScalar) {
@@ -205,19 +210,20 @@ GameEngine.prototype.detectCollisions = function() {
 };
 
 GameEngine.prototype.detectBulletCollisions = function() {
-  var enemyCount = this.allLivingEnemies.length;
+  var enemies = this.allLivingEnemies;
+  var enemyCount = enemies.length;
   var playerBulletCount = this.playerBullets.length;
 
   for (var i = 0; i < playerBulletCount; i++) {
     if (this.playerBullets[i].active) {
       for (var j = 0; j < enemyCount; j++) {
-        if (this.allLivingEnemies[j].alive) {
-          if (this.colliding(this.allLivingEnemies[j], this.playerBullets[i])) {
-            this.allLivingEnemies[j].die();
+        if (enemies[j].alive) {
+          if (this.colliding(enemies[j], this.playerBullets[i])) {
+            enemies[j].die();
             this.explode({ 
-                x: this.allLivingEnemies[j].frame.x + this.allLivingEnemies[j].frame.width / 2, 
-                y: this.allLivingEnemies[j].frame.y + this.allLivingEnemies[j].frame.height / 2
-              }, this.allLivingEnemies[j].characterType);
+                x: enemies[j].frame.x + enemies[j].frame.width / 2, 
+                y: enemies[j].frame.y + enemies[j].frame.height / 2
+              }, enemies[j].characterType);
             this.playerBullets[i].die();
           }
         }
@@ -340,7 +346,15 @@ GameEngine.prototype.getPressedKeys = function() {
  * @return Array: An array of enemy objects with each visible enemy in the game world
  */
 GameEngine.prototype.getAllEnemies = function() {
-  return this.topRowRight.enemies.concat([]);
+  var enemies = [];
+
+  if (this.firstWave.renderable) {
+    enemies = this.firstWave.enemies;
+  } else {
+    enemies = this.secondWave.enemies;
+  }
+
+  return enemies;
 };
 
 GameEngine.prototype.getAllLivingEnemies = function() {

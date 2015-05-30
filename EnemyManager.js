@@ -11,24 +11,30 @@ EnemyManager.prototype.initialize = function(enemyType, enemyCount, startingCoor
   this.angleIncrement = 2;
   this.direction = 1;
   this.startingCoordinates = startingCoordinates;
+  this.renderable = false;
 
-  if (enemyType.toLowerCase() === 'hank') {
+  if (enemyType.toLowerCase() === 'firstwave') {
     for (var i = 0; i < enemyCount; i++) {
-      this.enemies.push(new Hank().initialize(
-        { x: startingCoordinates.x, y: startingCoordinates.y - (i * Enemies.hank.frame.height) }
-      ));
+      this.enemies.push(new Hank().initialize({
+        x: startingCoordinates.x,
+        y: startingCoordinates.y - (i * Enemies.hank.frame.height)
+      }));
     }
   }
 
-  if (enemyType.toLowerCase() === 'dean') {
+  if (enemyType.toLowerCase() === 'secondwave') {
     for (var i = 0; i < enemyCount; i++) {
-      this.enemies.push(new Dean().initialize({ y: 90, x: (i + 2) * 55 }));
-    }
-  }
-
-  if (enemyType.toLowerCase() === 'brock') {
-    for (var i = 0; i < enemyCount; i++) {
-      this.enemies.push(new Brock().initialize({ y: 50, x: (i + 2) * 55 }));
+      if (i < 5) {
+        this.enemies.push(new Brock().initialize({
+          x: startingCoordinates.x + (i * Enemies.brock.frame.width),
+          y: -startingCoordinates.y
+        }));
+      } else {
+        this.enemies.push(new Brock().initialize({
+          x: startingCoordinates.x + ((i - 5) * Enemies.brock.frame.width),
+          y: -startingCoordinates.y + Enemies.brock.frame.height
+        }));
+      }
     }
   }
 
@@ -39,9 +45,12 @@ EnemyManager.prototype.firstWave = function(timeScalar, bounds) {
   this.first_movement_change_height = 350;
   this.second_movement_change_height = this.first_movement_change_height + 100;
 
+  var deadEnemies = 0;
+
   for (var i = 0, l = this.enemies.length; i < l; i++) {
     var enemy = this.enemies[i];
     if (!enemy.alive) {
+      deadEnemies++
       continue;
     }
 
@@ -55,12 +64,22 @@ EnemyManager.prototype.firstWave = function(timeScalar, bounds) {
         enemy.frame.x -= Math.pow(timeScalar, 0.9) * (i % 2 === 0 ? 1 : -1);
       }
     } else {
-      enemy.frame.y += timeScalar;
+      enemy.frame.y += timeScalar * 0.85;
     }
 
     if (enemy.frame.x >= bounds.right || enemy.frame.x <= bounds.left) {
       enemy.die();
     }
+  }
+
+  if (deadEnemies == l) {
+    this.renderable = false;
+  }
+};
+
+EnemyManager.prototype.secondWave = function(timeScalar, bounds) {
+  for (var i = 0, l = this.enemies.length; i < l; i++) {
+   
   }
 };
 

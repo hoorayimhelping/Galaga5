@@ -23,7 +23,7 @@ export default class Control {
       // chrome handles escape strangely
       if (e.which == 27) {
         this.pressedKeys['escape'] = true;
-        // should pause
+        return false;
       }
 
       if (e.which == 37) {
@@ -47,6 +47,11 @@ export default class Control {
     });
 
     window.addEventListener('keyup', e => {
+      if (e.which == 27) {
+        this.pressedKeys['escape'] = false;
+        return false;
+      }
+
       if (e.which == 32) {
         this.pressedKeys['spacebar'] = false;
         return false;

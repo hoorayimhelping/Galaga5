@@ -53,7 +53,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var game = new _director2.default();
-	game.run();
+	game.startGame();
 
 /***/ },
 /* 1 */
@@ -80,30 +80,73 @@
 	
 	  _classCallCheck(this, Galaga);
 	
-	  this.load = function () {};
+	  this.load = function () {
+	    console.log('loading');
+	  };
 	
-	  this.update = function (dt) {};
+	  this.startGame = function () {
+	    _this.load();
+	
+	    _this.gameState.paused = false;
+	    _this.run();
+	  };
+	
+	  this.update = function (dt) {
+	    _this.pollInput(dt);
+	
+	    if (!_this.gameState.paused) {
+	      // update stuff
+	    }
+	
+	    _this.render(dt);
+	  };
+	
+	  this.pollInput = function (dt) {
+	    _this.gameState.pressedKeys = _this.control.getPressedKeys();
+	
+	    Object.keys(_this.gameState.pressedKeys).map(function (key) {
+	      if (key === 'escape') {
+	        if (_this.gameState.pressedKeys[key]) {
+	          _this.gameState.paused = !_this.gameState.paused;
+	        }
+	      }
+	    });
+	  };
+	
+	  this.render = function (dt) {
+	    if (_this.gameState.paused) {
+	      console.log('paused');
+	    } else {
+	      console.log('not paused');
+	    }
+	  };
 	
 	  this.run = function () {
 	    requestAnimationFrame(_this.run);
 	
-	    var now = +new Date();
-	    var dt = now - _this.timing.lastFrameTime;
+	    _this.timing.now = new Date();
+	    _this.timing.dt = _this.timing.now - _this.timing.lastFrameTime;
 	
-	    if (dt < 160) {
-	      _this.update(dt);
+	    if (_this.timing.dt < 160) {
+	      _this.update(_this.timing.dt);
 	    }
 	
-	    _this.timing.lastFrameTime = now;
+	    _this.timing.lastFrameTime = _this.timing.now;
 	  };
 	
 	  this.timing = {
-	    lastFrameTime: 0
+	    lastFrameTime: 0,
+	    startTime: new Date(),
+	    now: new Date(),
+	    dt: 0
 	  };
 	
 	  this.control = new _control2.default();
 	
-	  this.load();
+	  this.gameState = {
+	    paused: false,
+	    pressedKeys: this.control.getPressedKeys()
+	  };
 	};
 	
 	exports.default = Galaga;
@@ -118,13 +161,12 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	/* If the following evaluates to true, the two rectangles are not colliding
+	 * (first.bottom < second.top) || (first.top > second.bottom) ||
+	 * (first.left > second.right) || (first.right < second.left)
+	 */
 	var areColliding = exports.areColliding = function areColliding(first, second) {
-	  return (
-	    /* If the following evaluates to true, the two rectangles are not colliding
-	       (first.bottom < second.top) || (first.top > second.bottom) ||
-	       (first.left > second.right) || (first.right < second.left) */
-	    !(first.frame.height + first.frame.y < second.frame.y || first.frame.y > second.frame.height + second.frame.y || first.frame.x > second.frame.x + second.frame.width || first.frame.x + first.frame.width < second.frame.x)
-	  );
+	  return !(first.frame.height + first.frame.y < second.frame.y || first.frame.y > second.frame.height + second.frame.y || first.frame.x > second.frame.x + second.frame.width || first.frame.x + first.frame.width < second.frame.x);
 	};
 
 /***/ },
@@ -164,7 +206,7 @@
 	      // chrome handles escape strangely
 	      if (e.which == 27) {
 	        _this.pressedKeys['escape'] = true;
-	        // should pause
+	        return false;
 	      }
 	
 	      if (e.which == 37) {
@@ -188,6 +230,11 @@
 	    });
 	
 	    window.addEventListener('keyup', function (e) {
+	      if (e.which == 27) {
+	        _this.pressedKeys['escape'] = false;
+	        return false;
+	      }
+	
 	      if (e.which == 32) {
 	        _this.pressedKeys['spacebar'] = false;
 	        return false;

@@ -1,13 +1,16 @@
 import keypress from 'keypress';
 
-import { areColliding } from './physics';
-import Control from './control';
+import { areColliding } from '../engine/physics';
+import { Player } from './character';
 
 export default class Galaga {
-  control;
-  keyboardListener;
 
-  constructor() {
+  enemies;
+  keyboardListener;
+  player;
+  renderer;
+
+  constructor(renderer) {
     this.timing = {
       lastFrameTime: 0,
       startTime: new Date,
@@ -15,20 +18,30 @@ export default class Galaga {
       dt: 0
     };
 
+    this.renderer = renderer;
     this.gameState = {
       paused: false
     };
-
-    this.previousGameState = { ...this.gameState };
   }
 
   loadAssets = () => {
     this.keyboardListener = new keypress.Listener(window);
+    this.player = new Player();
+  };
+
+  bindKeyboard = () => {
+    this.keyboardListener.simple_combo("escape", this.pause);
+  };
+
+  initializeGameState = () => {
+    this.player.location.x = 100;
+    this.player.location.y = 100;
   };
 
   startGame = () => {
     this.loadAssets();
     this.bindKeyboard();
+    this.initializeGameState();
 
     this.gameState.paused = false;
     this.run();
@@ -47,19 +60,11 @@ export default class Galaga {
   pollInput = dt => {  };
 
   render = dt => {
-    if (this.gameState.paused) {
-      console.log('paused');
-    } else {
-      console.log('not paused');
-    }
+    this.renderer.render([this.player]);
   };
 
   pause = () => {
     this.gameState.paused = !this.gameState.paused;
-  };
-
-  bindKeyboard = () => {
-    this.keyboardListener.simple_combo("escape", this.pause);
   };
 
   run = () => {

@@ -1,0 +1,4 @@
+--require babel-core/register
+--require ./test/environment.js
+--reporter list
+--ui bdd

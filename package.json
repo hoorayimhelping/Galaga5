@@ -20,6 +20,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "eslint": "^3.2.0",
+    "keypress": "git+ssh://git@github.com:dmauro/Keypress.git",
     "mocha": "^2.5.3",
     "webpack": "^1.13.1"
   }

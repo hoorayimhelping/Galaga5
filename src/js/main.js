@@ -1,3 +1,4 @@
-let x = "blue";
+import Galaga from './game/director';
 
-console.log(x);
+let game = new Galaga();
+game.run();

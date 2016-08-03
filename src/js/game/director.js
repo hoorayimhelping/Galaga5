@@ -2,6 +2,7 @@ import keypress from 'keypress';
 
 import { areColliding } from '../engine/physics';
 import { Player } from './character';
+import Bullet from './bullet';
 
 export default class Galaga {
 
@@ -9,10 +10,12 @@ export default class Galaga {
   keyboardListener;
   player;
   renderer;
+  stage
 
-  constructor(renderer, performance) {
+  constructor(renderer, performance, stage) {
     this.renderer = renderer;
     this.performance = performance;
+    this.stage = stage;
 
     this.timing = {
       lastFrameTime: 0,
@@ -25,7 +28,9 @@ export default class Galaga {
       shouldDisplay: false
     };
     this.gameState = {
-      paused: false
+      paused: false,
+      bullets: [],
+      activeBullet: null
     };
   }
 
@@ -35,12 +40,16 @@ export default class Galaga {
   };
 
   bindKeyboard = () => {
-    this.keyboardListener.simple_combo("escape", this.pause);
+    this.keyboardListener.simple_combo("escape", this.togglePause);
+    this.keyboardListener.simple_combo("space", this.fireBullet);
   };
 
   initializeGameState = () => {
-    this.player.location.x = 100;
-    this.player.location.y = 100;
+    this.player.location.x = (this.stage.width / 2) - (this.player.frame.width / 2);
+    this.player.location.y = this.stage.height - this.player.frame.height;
+
+    this.gameState.bullets = [new Bullet(), new Bullet()];
+    this.gameState.activeBullet = this.gameState.bullets[0];
   };
 
   startGame = () => {
@@ -52,28 +61,47 @@ export default class Galaga {
     this.run();
   };
 
-  update = dt => {
+  togglePause = () => {
+    this.gameState.paused = !this.gameState.paused;
+  };
 
+  fireBullet = () => {
+    if (this.gameState.paused || !this.player.alive) { return; }
+
+    this.gameState.activeBullet = this.gameState.bullets.find(bullet => bullet.alive === false) || null;
+
+    if (!this.gameState.activeBullet) { return; }
+
+    this.gameState.activeBullet.location.x = this.player.location.x + (this.player.frame.width / 2) - 4;
+    this.gameState.activeBullet.location.y = this.stage.height - this.player.frame.height - 15;
+    this.gameState.activeBullet.spawn();
+  };
+
+  update = dt => {
     if (!this.gameState.paused) {
-      // update stuff
+      this.gameState.bullets.map(bullet => {
+        if (bullet.location.y + bullet.frame.height <= 0) {
+          bullet.die();
+          return;
+        }
+        bullet.update(-bullet.velocity.y * dt / 2);
+      });
     }
 
     if (this.stats.shouldDisplay) {
-      this.performance.update(dt, 0);
+      this.performance.update(dt);
     }
 
     this.render(dt);
     this.previousGameState = Object.assign({}, this.gameState);
   };
 
-  pollInput = dt => {  };
-
   render = dt => {
-    this.renderer.render([this.player]);
-  };
+    this.renderer.render([this.player, ...this.gameState.bullets]);
 
-  pause = () => {
-    this.gameState.paused = !this.gameState.paused;
+    if (this.stats.shouldDisplay) {
+      this.performance.render(dt);
+    }
   };
 
   run = () => {

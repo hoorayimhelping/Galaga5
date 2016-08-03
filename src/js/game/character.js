@@ -6,13 +6,29 @@ export class Character {
     this.location = { x: 0, y: 0 };
     this.velocity = { x: 0, y: 0 };
     this.acceleration = { x: 0, y: 0 };
-    this.alive = true;
     this.sprite = {};
+
+    this.spawn();
+  };
+
+  spawn = () => {
+    this.alive = true;
   };
 
   die = () => {
     this.alive = false;
-  }
+  };
+
+  render = () => {
+    return {
+      type: 'sprite',
+      attributes: [
+        this.sprite, this.sprite.frame.x, this.sprite.frame.y,
+        this.sprite.frame.width, this.sprite.frame.height,
+        this.location.x, this.location.y, this.frame.width, this.frame.height
+      ]
+    };
+  };
 };
 
 export class Player extends Character {
@@ -25,16 +41,5 @@ export class Player extends Character {
 
     this.frame.width = this.sprite.frame.width / 3;
     this.frame.height = this.sprite.frame.height / 3;
-  }
-
-  render = () => {
-    return {
-      type: 'sprite',
-      attributes: [
-        this.sprite, this.sprite.frame.x, this.sprite.frame.y,
-        this.sprite.frame.width, this.sprite.frame.height,
-        this.location.x, this.location.y, this.frame.width, this.frame.height
-      ]
-    };
   }
 };

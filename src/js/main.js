@@ -8,6 +8,11 @@ let $performance = document.getElementById('performance');
 let renderer = new Renderer($canvas.getContext('2d'));
 let performanceMonitor = new Performance($performance);
 
-let game = new Galaga(renderer, performanceMonitor);
+const stage = {
+  height: $canvas.clientHeight,
+  width: $canvas.clientWidth
+};
+
+let game = new Galaga(renderer, performanceMonitor, stage);
 game.stats.shouldDisplay = true;
 game.startGame();

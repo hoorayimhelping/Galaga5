@@ -19,6 +19,8 @@ export default class Renderer {
     this.renderBackground();
 
     renderables.map(renderable => {
+      if (!renderable.alive) { return; }
+
       this.renderProperties = renderable.render();
       if (this.renderProperties.type === 'sprite') {
         this.context.drawImage(...this.renderProperties.attributes);

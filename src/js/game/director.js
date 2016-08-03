@@ -10,7 +10,10 @@ export default class Galaga {
   player;
   renderer;
 
-  constructor(renderer) {
+  constructor(renderer, performance) {
+    this.renderer = renderer;
+    this.performance = performance;
+
     this.timing = {
       lastFrameTime: 0,
       startTime: new Date,
@@ -18,7 +21,9 @@ export default class Galaga {
       dt: 0
     };
 
-    this.renderer = renderer;
+    this.stats = {
+      shouldDisplay: false
+    };
     this.gameState = {
       paused: false
     };
@@ -51,6 +56,10 @@ export default class Galaga {
 
     if (!this.gameState.paused) {
       // update stuff
+    }
+
+    if (this.stats.shouldDisplay) {
+      this.performance.update(dt, 0);
     }
 
     this.render(dt);

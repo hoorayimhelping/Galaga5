@@ -17,7 +17,10 @@ export default class Control {
   bindKeyboard = () => {
     window.addEventListener('keydown', e => {
       // ignore spacebar presses, so the keypress handler below can pick this event up
-      if (e.which == 32) { return true; }
+      if (e.which == 32) {
+        this.pressedKeys['spacebar'] = true;
+        return false;
+      }
 
       // chrome handles escape strangely
       if (e.which == 27) {
@@ -73,14 +76,6 @@ export default class Control {
       }
 
       return true;
-    });
-
-    window.addEventListener('keypress', e => {
-      if (e.which == 32) {
-        this.pressedKeys['spacebar'] = true;
-        // should fire
-      }
-      return false;
     });
   };
 };

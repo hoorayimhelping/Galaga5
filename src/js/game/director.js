@@ -1,5 +1,4 @@
 import keypress from 'keypress';
-
 import { areColliding } from '../engine/physics';
 import { Player } from './character';
 import Bullet from './bullet';
@@ -42,6 +41,13 @@ export default class Galaga {
   bindKeyboard = () => {
     this.keyboardListener.simple_combo("escape", this.togglePause);
     this.keyboardListener.simple_combo("space", this.fireBullet);
+    this.keyboardListener.simple_combo("left right", () => null);
+    this.keyboardListener.simple_combo("right", () => {
+      this.movePlayer('right');
+    });
+    this.keyboardListener.simple_combo("left", () => {
+      this.movePlayer('left');
+    });
   };
 
   initializeGameState = () => {
@@ -77,6 +83,18 @@ export default class Galaga {
     this.gameState.activeBullet.spawn();
   };
 
+  movePlayer = direction => {
+    // guard for player being at the left edge and hitting left
+    if (this.player.location.x <= 0 && direction === 'left') { return 0; }
+
+    // guard for player being at the right edge and hitting right
+    if (this.player.location.x >= this.stage.width - this.player.frame.width && direction === 'reight') { return 0; }
+
+    var distance = direction === 'right' ? 1 : -1;
+
+    this.player.move(distance * 10);
+  };
+
   update = dt => {
     if (!this.gameState.paused) {
       this.gameState.bullets.map(bullet => {
@@ -93,7 +111,6 @@ export default class Galaga {
     }
 
     this.render(dt);
-    this.previousGameState = Object.assign({}, this.gameState);
   };
 
   render = dt => {

@@ -42,4 +42,8 @@ export class Player extends Character {
     this.frame.width = this.sprite.frame.width / 3;
     this.frame.height = this.sprite.frame.height / 3;
   }
+
+  move = distance => {
+    this.location.x += distance;
+  };
 };

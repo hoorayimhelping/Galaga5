@@ -72,11 +72,15 @@ export default class Galaga {
   };
 
   fireBullet = () => {
-    if (this.gameState.paused || !this.player.alive) { return; }
+    if (this.gameState.paused || !this.player.alive) {
+      return;
+    }
 
     this.gameState.activeBullet = this.gameState.bullets.find(bullet => bullet.alive === false) || null;
 
-    if (!this.gameState.activeBullet) { return; }
+    if (!this.gameState.activeBullet) {
+      return;
+    }
 
     this.gameState.activeBullet.location.x = this.player.location.x + (this.player.frame.width / 2) - 4;
     this.gameState.activeBullet.location.y = this.stage.height - this.player.frame.height - 15;
@@ -85,14 +89,16 @@ export default class Galaga {
 
   movePlayer = direction => {
     // guard for player being at the left edge and hitting left
-    if (this.player.location.x <= 0 && direction === 'left') { return 0; }
+    if (this.player.location.x <= 0 && direction === 'left') {
+      return;
+    }
 
     // guard for player being at the right edge and hitting right
-    if (this.player.location.x >= this.stage.width - this.player.frame.width && direction === 'reight') { return 0; }
+    if (this.player.location.x >= this.stage.width - this.player.frame.width && direction === 'right') {
+      return;
+    }
 
-    var distance = direction === 'right' ? 1 : -1;
-
-    this.player.move(distance * 10);
+    this.player.move((direction === 'right' ? 1 : -1) * 10);
   };
 
   update = dt => {

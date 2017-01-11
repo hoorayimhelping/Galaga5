@@ -21,7 +21,9 @@ export default class PerformanceStats {
   };
 
   render = dt => {
-    if (this.elapsedTime <= 100) { return; }
+    if (this.elapsedTime <= 100) {
+      return;
+    }
 
     this.adjustedFPS = (this.fps / this.frames).toFixed(2);
     if (isNaN(this.adjustedFPS) || !isFinite(this.adjustedFPS)) {

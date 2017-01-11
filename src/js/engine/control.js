@@ -12,7 +12,8 @@ export default class Control {
 
   getPressedKeys = () => this.pressedKeys;
 
-  clearPressedKeys = () => Object.keys(this.pressedKeys).map(key => this.pressedKeys[key] = false);
+  clearPressedKey = key => this.pressedKeys[key] = false;
+  clearPressedKeys = () => Object.keys(this.pressedKeys).map(clearPressedKey);
 
   bindKeyboard = () => {
     window.addEventListener('keydown', e => {

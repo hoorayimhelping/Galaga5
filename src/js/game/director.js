@@ -4,7 +4,6 @@ import { Player } from './character';
 import Bullet from './bullet';
 
 export default class Galaga {
-
   enemies;
   keyboardListener;
   player;

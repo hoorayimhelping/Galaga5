@@ -1,19 +1,19 @@
-import keypress from 'keypress';
 import { areColliding } from '../engine/physics';
 import { Player } from './character';
 import Bullet from './bullet';
 
 export default class Galaga {
   enemies;
-  keyboardListener;
+  keyboard;
   player;
   renderer;
   stage
 
-  constructor(renderer, performance, stage) {
+  constructor(renderer, performance, stage, keyboard) {
     this.renderer = renderer;
     this.performance = performance;
     this.stage = stage;
+    this.keyboard = keyboard;
 
     this.timing = {
       lastFrameTime: 0,
@@ -33,20 +33,11 @@ export default class Galaga {
   }
 
   loadAssets = () => {
-    this.keyboardListener = new keypress.Listener(window);
     this.player = new Player();
   };
 
   bindKeyboard = () => {
-    this.keyboardListener.simple_combo("escape", this.togglePause);
-    this.keyboardListener.simple_combo("space", this.fireBullet);
-    this.keyboardListener.simple_combo("left right", () => null);
-    this.keyboardListener.simple_combo("right", () => {
-      this.movePlayer('right');
-    });
-    this.keyboardListener.simple_combo("left", () => {
-      this.movePlayer('left');
-    });
+    this.keyboard.bindKeyboard();
   };
 
   initializeGameState = () => {

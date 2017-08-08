@@ -10,10 +10,12 @@ export default class Control {
     };
   }
 
-  getPressedKeys = () => this.pressedKeys;
-
+  getPressedKeys = () => Object.keys(this.pressedKeys).filter(key => this.pressedKeys[key] === true);
   clearPressedKey = key => this.pressedKeys[key] = false;
   clearPressedKeys = () => Object.keys(this.pressedKeys).map(clearPressedKey);
+
+  right = () => this.pressedKeys.rightArrow && !this.pressedKeys.leftArrow;
+  left = () => this.pressedKeys.leftArrow && !this.pressedKeys.rightArrow;
 
   bindKeyboard = () => {
     window.addEventListener('keydown', event => {

@@ -2,6 +2,9 @@ import { areColliding } from '../engine/physics';
 import { Player } from './character';
 import Bullet from './bullet';
 
+const left = Symbol.for('left');
+const right = Symbol.for('right');
+
 export default class Galaga {
   enemies;
   keyboard;
@@ -78,28 +81,41 @@ export default class Galaga {
   };
 
   movePlayer = direction => {
-    // guard for player being at the left edge and hitting left
-    if (this.player.location.x <= 0 && direction === 'left') {
-      return;
-    }
-
     // guard for player being at the right edge and hitting right
-    if (this.player.location.x >= this.stage.width - this.player.frame.width && direction === 'right') {
+    if (this.player.location.x <= 0 && direction === right) {
       return;
     }
 
-    this.player.move((direction === 'right' ? 1 : -1) * 10);
+    // guard for player being at the left edge and hitting left
+    if (this.player.location.x >= this.stage.width - this.player.frame.width && direction === left) {
+      return;
+    }
+
+    this.player.move((direction === right ? -1 : 1) * 10);
+  };
+
+  updateBullets = dt => {
+    this.gameState.bullets.map(bullet => {
+      if (bullet.location.y + bullet.frame.height <= 0) {
+        bullet.die();
+        return;
+      }
+      bullet.update(-bullet.velocity.y * dt / 2);
+    });
+  };
+
+  updatePlayer = dt => {
+    if (this.keyboard.right()) {
+      this.movePlayer(left);
+    } else if (this.keyboard.left()) {
+      this.movePlayer(right);
+    }
   };
 
   update = dt => {
     if (!this.gameState.paused) {
-      this.gameState.bullets.map(bullet => {
-        if (bullet.location.y + bullet.frame.height <= 0) {
-          bullet.die();
-          return;
-        }
-        bullet.update(-bullet.velocity.y * dt / 2);
-      });
+      this.updateBullets(dt);
+      this.updatePlayer(dt);
     }
 
     if (this.stats.shouldDisplay) {

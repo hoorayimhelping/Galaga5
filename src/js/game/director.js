@@ -28,6 +28,7 @@ export default class Galaga {
     this.stats = {
       shouldDisplay: false
     };
+
     this.gameState = {
       paused: false,
       bullets: [],
@@ -95,11 +96,21 @@ export default class Galaga {
   };
 
   updateBullets = dt => {
-    this.gameState.bullets.map(bullet => {
+    if (this.keyboard.spacebar()) {
+      this.keyboard.clearPressedKey('spacebar');
+      this.fireBullet();
+    }
+
+    this.gameState.bullets.forEach(bullet => {
+      if (!bullet.alive) {
+        return;
+      }
+
       if (bullet.location.y + bullet.frame.height <= 0) {
         bullet.die();
         return;
       }
+
       bullet.update(-bullet.velocity.y * dt / 2);
     });
   };
@@ -121,8 +132,6 @@ export default class Galaga {
     if (this.stats.shouldDisplay) {
       this.performance.update(dt);
     }
-
-    this.render(dt);
   };
 
   render = dt => {
@@ -136,13 +145,14 @@ export default class Galaga {
   run = () => {
     requestAnimationFrame(this.run);
 
-    this.timing.now = new Date;
+    this.timing.now = new Date();
     this.timing.dt = (this.timing.now - this.timing.lastFrameTime);
 
     if (this.timing.dt < 160) {
       this.update(this.timing.dt);
     }
+    this.render();
 
-    this.timing.lastFrameTime = this.timing.now;
+    this.timing.lastFrameTime = new Date();
   };
 };

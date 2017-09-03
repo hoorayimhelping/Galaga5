@@ -16,34 +16,34 @@ export default class Control {
 
   right = () => this.pressedKeys.rightArrow && !this.pressedKeys.leftArrow;
   left = () => this.pressedKeys.leftArrow && !this.pressedKeys.rightArrow;
+  spacebar = () => this.pressedKeys.spacebar;
 
   bindKeyboard = () => {
     window.addEventListener('keydown', event => {
-      // ignore spacebar presses, so the keypress handler below can pick this event up
-      if (event.which == 32) {
+      if (event.which === 32) {
         this.pressedKeys['spacebar'] = true;
         return false;
       }
 
       // chrome handles escape strangely
-      if (event.which == 27) {
+      if (event.which === 27) {
         this.pressedKeys['escape'] = true;
         return false;
       }
 
-      if (event.which == 37) {
+      if (event.which === 37) {
         this.pressedKeys['leftArrow'] = true;
         return false
       }
-      if (event.which == 38) {
+      if (event.which === 38) {
         this.pressedKeys['upArrow'] = true;
         return false
       }
-      if (event.which == 39) {
+      if (event.which === 39) {
         this.pressedKeys['rightArrow'] = true;
         return false
       }
-      if (event.which == 40) {
+      if (event.which === 40) {
         this.pressedKeys['downArrow'] = true;
         return false
       }
@@ -52,28 +52,24 @@ export default class Control {
     });
 
     window.addEventListener('keyup', event => {
-      if (event.which == 27) {
+      if (event.which === 27) {
         this.pressedKeys['escape'] = false;
         return false;
       }
 
-      if (event.which == 32) {
-        this.pressedKeys['spacebar'] = false;
-        return false;
-      }
-      if (event.which == 37) {
+      if (event.which === 37) {
         this.pressedKeys['leftArrow'] = false;
         return false
       }
-      if (event.which == 38) {
+      if (event.which === 38) {
         this.pressedKeys['upArrow'] = false;
         return false
       }
-      if (event.which == 39) {
+      if (event.which === 39) {
         this.pressedKeys['rightArrow'] = false;
         return false
       }
-      if (event.which == 40) {
+      if (event.which === 40) {
         this.pressedKeys['downArrow'] = false;
         return false
       }

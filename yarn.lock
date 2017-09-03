@@ -1817,10 +1817,6 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-"keypress@git+https://github.com/dmauro/Keypress.git":
-  version "2.1.4"
-  resolved "git+https://github.com/dmauro/Keypress.git#80c0f972486e7db0ac8ab81ba57bb9fcd6626e1e"
-
 kind-of@^3.0.2:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-3.2.2.tgz#31ea21a734bab9bbb0f32466d893aea51e4a3c64"

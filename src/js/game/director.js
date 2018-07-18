@@ -1,5 +1,5 @@
 import { areColliding } from '../engine/physics';
-import { Player } from './character';
+import { Player, EnemyOne } from './character';
 import Bullet from './bullet';
 
 const left = Symbol.for('left');
@@ -17,6 +17,9 @@ export default class Galaga {
     this.performance = performance;
     this.stage = stage;
     this.keyboard = keyboard;
+
+    this.enemyOnes = [];
+    this.enemies = [];
 
     this.timing = {
       lastFrameTime: 0,
@@ -38,6 +41,10 @@ export default class Galaga {
 
   loadAssets = () => {
     this.player = new Player();
+
+    for (let i = 0; i < 8; i++) {
+      this.enemyOnes.push(new EnemyOne());
+    }
   };
 
   bindKeyboard = () => {
@@ -48,8 +55,14 @@ export default class Galaga {
     this.player.location.x = (this.stage.width / 2) - (this.player.frame.width / 2);
     this.player.location.y = this.stage.height - this.player.frame.height;
 
+    this.enemyOnes.map((enemy, i) => {
+      enemy.location.x = (i + 1) * enemy.frame.width;
+      enemy.location.y = enemy.frame.height;
+    });
+
     this.gameState.bullets = [new Bullet(), new Bullet()];
     this.gameState.activeBullet = this.gameState.bullets[0];
+    this.enemies = [...this.enemies, ...this.enemyOnes];
   };
 
   startGame = () => {
@@ -135,7 +148,7 @@ export default class Galaga {
   };
 
   render = dt => {
-    this.renderer.render([this.player, ...this.gameState.bullets]);
+    this.renderer.render([this.player, ...this.enemies, ...this.gameState.bullets]);
 
     if (this.stats.shouldDisplay) {
       this.performance.render(dt);

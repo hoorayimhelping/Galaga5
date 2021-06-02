@@ -1,6 +1,8 @@
 html, body, div, canvas { font-family: helvetica; margin: 0; padding: 0; }
 
-#canvas { border: 4px solid #D36; display: block; margin: 0 auto; }
+.canvas { border: 4px solid #D36; display: block; left: 33% ;margin: 0 auto; position: absolute; }
+
+.canvas_container { position:relative; }
 
 #performance_stats { background: #222; color: #FFF; font-size: 20px; height: 5%; padding: 40px 0;
   position: absolute; right: 0; width: 25%; z-index: 2; }

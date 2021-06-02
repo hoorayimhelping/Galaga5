@@ -30,7 +30,10 @@
 <body>
 <div id="performance_stats"></div>
 <div id="pause_menu"></div>
-<canvas id="canvas" width="465" height="600"></canvas>
+<div class="canvas_container">
+  <canvas id="background_canvas" width="465" height="600" class="canvas"></canvas>
+  <canvas id="canvas" width="465" height="600" class="canvas"></canvas>
+</div>
 <!-- <h2><a id="start_game" href="">Start!</a></h2> -->
 <script type="text/javascript">
   // oh my jesus a freaking global variable! HALP!!!!
@@ -39,11 +42,10 @@
 
   $(document).ready(function() {
     var canvas = $('#canvas')[0];
+    var background_canvas = $('#background_canvas')[0];
 
-    galagaEngine.initialize(canvas)
+    galagaEngine.initialize(canvas, background_canvas)
                 .togglePerformanceStats('on', $('#performance_stats')[0]);
-    
-    
 
     $('#performance_stats')
     .append('<a href="" id="reload_link">Restart</a>')

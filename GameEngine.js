@@ -7,10 +7,10 @@ var GameEngine = function() {};
  *
  * @return GameEngine: Returns itself
  */
-GameEngine.prototype.initialize = function(canvas) {
+GameEngine.prototype.initialize = function(canvas, backgroundCanvas) {
   this.canvas = canvas;
   this.performanceStats = new PerformanceStats();
-  this.renderer = new Renderer().initialize(this.canvas.getContext('2d'));
+  this.renderer = new Renderer().initialize(this.canvas.getContext('2d'), backgroundCanvas.getContext('2d'));
   this.inputManager = new InputManager().initialize({
     pause: this.togglePause.bind(this),
     fire: this.fire.bind(this)
@@ -48,7 +48,7 @@ GameEngine.prototype.initialize = function(canvas) {
   this.lastFrameTime = +new Date;
 
   this.renderer.clear();
-  this.renderer.renderBackground();
+  this.renderer.renderStarField()
 
   return this;
 };
@@ -81,7 +81,6 @@ GameEngine.prototype.update = function(dt) {
 
 GameEngine.prototype.render = function(dt) {
   this.renderer.clear();
-  this.renderer.renderBackground();
 
   if (this.player.alive) {
     this.renderer.renderPlayer(this.player);
@@ -95,7 +94,7 @@ GameEngine.prototype.render = function(dt) {
   var particles = this.getAllParticles();
   for (var i = 0, l = particles.length; i < l; i++) {
     if (!particles[i].alive) { continue; }
-  
+
     this.renderer.renderParticle(particles[i]);
   }
 
@@ -220,8 +219,8 @@ GameEngine.prototype.detectBulletCollisions = function() {
         if (enemies[j].alive) {
           if (this.colliding(enemies[j], this.playerBullets[i])) {
             enemies[j].die();
-            this.explode({ 
-                x: enemies[j].frame.x + enemies[j].frame.width / 2, 
+            this.explode({
+                x: enemies[j].frame.x + enemies[j].frame.width / 2,
                 y: enemies[j].frame.y + enemies[j].frame.height / 2
               }, enemies[j].characterType);
             this.playerBullets[i].die();
@@ -245,8 +244,8 @@ GameEngine.prototype.detectPlayerCollisions = function() {
         }, 'player');
 
         enemies[i].die();
-        this.explode({ 
-          x: enemies[i].frame.x + enemies[i].frame.width / 2, 
+        this.explode({
+          x: enemies[i].frame.x + enemies[i].frame.width / 2,
           y: enemies[i].frame.y + enemies[i].frame.height / 2
         }, enemies[i].characterType);
       }
@@ -263,11 +262,11 @@ GameEngine.prototype.detectPlayerCollisions = function() {
 GameEngine.prototype.colliding = function(ship, bullet) {
   /* If the following evaluates to true, the two rectangles are not colliding
      (ship.bottom < bullet.top) || (ship.top > bullet.bottom) ||
-	 (ship.left > bullet.right) || (ship.right < bullet.left) */
+   (ship.left > bullet.right) || (ship.right < bullet.left) */
   return !((ship.frame.height + ship.frame.y) < bullet.frame.y ||
-	       ship.frame.y > (bullet.frame.height + bullet.frame.y) ||
-	       ship.frame.x > (bullet.frame.x + bullet.frame.width) ||
-	       (ship.frame.x + ship.frame.width) < bullet.frame.x);
+         ship.frame.y > (bullet.frame.height + bullet.frame.y) ||
+         ship.frame.x > (bullet.frame.x + bullet.frame.width) ||
+         (ship.frame.x + ship.frame.width) < bullet.frame.x);
 };
 
 /**

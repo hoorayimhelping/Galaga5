@@ -28,7 +28,113 @@ Renderer.prototype.renderBackground = function() {
   this.context.fill();
 };
 
+// uses poisson disc sampling
+// see https://bl.ocks.org/mbostock/19168c663618b7f07158
 Renderer.prototype.renderStarField = function() {
+  function poissonDiscSampler(width, height, radius) {
+    const maxSamples = 30; // maximum number of samples before rejection
+    const squaredRadius = radius * radius;
+    const R = 3 * squaredRadius;
+    const cellSize = radius * Math.SQRT1_2;
+    const gridWidth = Math.ceil(width / cellSize);
+    const gridHeight = Math.ceil(height / cellSize);
+    const grid = new Array(gridWidth * gridHeight);
+    const queue = [];
+    let queueSize = 0;
+    let sampleSize = 0;
+
+    return function() {
+      
+      if (!sampleSize) {
+        return sample(0, 0);
+      }
+
+      // Pick a random existing sample and remove it from the queue.
+      while (queueSize) {
+        var i = Math.random() * queueSize | 0,
+            s = queue[i];
+
+        // Make a new candidate between [radius, 2 * radius] from the existing sample.
+        for (var j = 0; j < maxSamples; ++j) {
+          var a = 2 * Math.PI * Math.random(),
+              r = Math.sqrt(Math.random() * R + squaredRadius),
+              x = s[0] + r * Math.cos(a),
+              y = s[1] + r * Math.sin(a);
+
+          // Reject candidates that are outside the allowed extent,
+          // or closer than 2 * radius to any existing sample.
+          if (x >= 0 && x < width && 
+              y >= 0 && y < height && 
+              far(x, y)) {
+            return sample(x, y);
+          }
+        }
+
+        queue[i] = queue[--queueSize];
+        queue.length = queueSize;
+      }
+    };
+
+    function far(x, y) {
+      var i = x / cellSize | 0,
+          j = y / cellSize | 0,
+          i0 = Math.max(i - 2, 0),
+          j0 = Math.max(j - 2, 0),
+          i1 = Math.min(i + 3, gridWidth),
+          j1 = Math.min(j + 3, gridHeight);
+
+      for (j = j0; j < j1; ++j) {
+        var o = j * gridWidth;
+        let s;
+
+        for (i = i0; i < i1; ++i) {
+          if (s = grid[o + i]) {
+            let dx = s[0] - x;
+            let dy = s[1] - y;
+            
+            if (dx * dx + dy * dy < squaredRadius) {
+              return false;
+            }
+          }
+        }
+      }
+
+      return true;
+    }
+
+    function sample(x, y) {
+      const sample = [x, y];
+
+      queue.push(sample);
+      grid[gridWidth * (y / cellSize | 0) + (x / cellSize | 0)] = sample;
+
+      sampleSize++;
+      queueSize++;
+
+      return sample;
+    }
+  }
+
+  this.backgroundContext.fillStyle = "rgba(0, 0, 0, 1)";
+  this.backgroundContext.fillRect(0, 0, this.backgroundContext.canvas.clientWidth, this.backgroundContext.canvas.clientHeight);
+
+  this.backgroundContext.fillStyle = "rgba(255, 255, 255, 1)";
+  var sample = poissonDiscSampler(this.backgroundContext.canvas.clientWidth, this.backgroundContext.canvas.clientHeight, 10);
+  do {
+    for (let j = 0; j < 10; j++) {
+      s = sample()
+      if (s) {
+        console.log(s)
+        this.backgroundContext.beginPath();
+        this.backgroundContext.arc(s[0], s[1], 1, 0, 2 * Math.PI, false);
+        this.backgroundContext.fill()
+      }
+    }
+  } while (s && s[0] < this.backgroundContext.canvas.clientWidth && s[1] < this.backgroundContext.canvas.clientHeight)
+}
+
+// old way that modifies image data directly
+Renderer.prototype.renderStarField_ = function() {
   this.backgroundContext.fillStyle = "rgba(0, 0, 0, 1)";
   this.backgroundContext.fillRect(0, 0, this.backgroundContext.canvas.clientWidth, this.backgroundContext.canvas.clientHeight);
   this.backgroundContext.fill();

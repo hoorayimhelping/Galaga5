@@ -119,14 +119,16 @@ Renderer.prototype.renderStarField = function() {
   this.backgroundContext.fillRect(0, 0, this.backgroundContext.canvas.clientWidth, this.backgroundContext.canvas.clientHeight);
 
   this.backgroundContext.fillStyle = "rgba(255, 255, 255, 1)";
-  var sample = poissonDiscSampler(this.backgroundContext.canvas.clientWidth, this.backgroundContext.canvas.clientHeight, 10);
+  var sample = poissonDiscSampler(this.backgroundContext.canvas.clientWidth, this.backgroundContext.canvas.clientHeight, 12);
+  let radius = 1;
   do {
     for (let j = 0; j < 10; j++) {
       s = sample()
       if (s) {
-        console.log(s)
+        this.backgroundContext.fillStyle = `rgba(255, 255, 255, 1)`;
+        radius = Math.random() * (1 - 0.2) + 0.2;
         this.backgroundContext.beginPath();
-        this.backgroundContext.arc(s[0], s[1], 1, 0, 2 * Math.PI, false);
+        this.backgroundContext.arc(s[0], s[1], radius, 0, 2 * Math.PI, false);
         this.backgroundContext.fill()
       }
     }

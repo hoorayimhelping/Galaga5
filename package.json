@@ -1,0 +1,30 @@
+{
+  "name": "hcap",
+  "version": "1.0.0",
+  "description": "VC Fundraising Platform - CRM, Pipeline, and AI-powered guidance",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.2.0",
+    "autoprefixer": "^10.4.20",
+    "bcryptjs": "^3.0.3",
+    "next": "^15.1.3",
+    "next-auth": "^4.24.13",
+    "postcss": "^8.4.49",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.6",
+    "prisma": "^7.2.0",
+    "tsx": "^4.21.0"
+  }
+}
